@@ -13,6 +13,7 @@
     
     
     <link rel="stylesheet" href="/css/index.css">  
+ 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -34,12 +35,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>    
-          <a class="navbar-brand" id="idUser" href="#"></h2>
+          <a class="navbar-brand" id="idUser" href="#"></a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/pages/clientView.html">Home</a></li>
-            <li class="active" id="getProjects"><a href="#">Projects</a></li>
+            <li class="active" id="newOrder"><a href="#">Make Order</a></li>
             <li class="active" id="newEmployee"><a href="#">Sign in</a></li>
 
           </ul>
@@ -53,49 +54,94 @@
     </nav>
 </div>
 
- <!--Modal where the client can register a new user-->       
+ <!--Modal where the client can order a new product-->       
 <div id="clientModal" class="modal" ng-controller="clientCtrl"  style="overflow-y: scroll;">
   <!-- Modal content -->
   <div class="modal-content">
     <div class="modal-header">
       <span id="close1" class="close">×</span>
-      <h2>New User</h2>
+      <h2>YOUR ORDER</h2>
     </div>
-    <!--Form where it can insert all information about the new user-->
+    <!--Form where it can insert all information about the new order-->
     <div class="modal-body">
+             <div class="box box boxP" id="reward">
             <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                <label for="U_Name" >Write a user name</label>
-                <input id=U_Name type="text" ng-model="U_Name" class="form-control" placeholder="Name">
-                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    <label for="branchStore">Select a BranchStore</label>
+                     <select id=branchStore type="number"  name="BranchStore" class="form-control" ng-model="branchStore" placeholder="Select a Brach Store" >
+                    <option ng-repeat="item in branchStores">{{item.S_ID}}</option>
+                    </select>
+            </div>        
+ 
+            <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                <label for="phone" >Write a Phone Number</label>
+                <input id=phone type="number" min="1" name="Phone" class="form-control" ng-model="phone" placeholder="Favorite Phone">
+                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                <label for="U_LName" >Write a user last name</label>
-                <input id=U_LName type="text" ng-model="U_LName" class="form-control" placeholder="Last Name">
-                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                <label for="status" >Write a order status</label>
+                <input id=status type="text" name="Status" class="form-control" ng-model="status" placeholder="Status">
+                <span class="glyphicon glyphicon-thumbs-up form-control-feedback"></span>
             </div>
-           <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-            <label for="U_ID" >Write a user ID</label>
-            <input id=U_ID type="number" min="100000000" max="999999999" ng-model="U_ID" class="form-control" placeholder="ID">
+          
+            <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                <label for="productName" >Write the product</label>
+                <input id=productName type="text" ng-model="productName" ng-change="addProduct()" class="form-control" ng-model="productName" placeholder="Search Product ">
                 <span class="glyphicon glyphicon-link form-control-feedback"></span>
             </div>
             
-            <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-            <label for="U_Phone" >Write a user phone</label>    
-            <input id=U_Phone type="number" ng-model="U_Phone" class="form-control" placeholder="Phone">
-                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
-            </div>
-        
-            <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                <label for="U_Password">Write a password</label>
-                <input id=U_Password type="password" ng-model="U_Password" class="form-control" placeholder="Password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
+           
 
-            <div align="center">
-                <button  ng-click="addUser()" style="margin: 20px 0px 0px 0px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create User</button>
+
+            
+
+           <div align="center">
+          <h2 ><font color="#F31F1F">Products<span class="glyphicon glyphicon-tag "></span></font></h2>
+                 
+        </div>
+         <!--Table that show all products information-->     
+            <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 0px;"> 
+                        <table id="mytable" class="table table-bordered table-striped">
+                    <thead>
+                        <th><h4><b>ID</b></h4></th>
+                        <th><h4><b>Name</b></h4></th>
+                        <th><h4><b>Description</b></h4></th>
+                        <th><h4><b>Price</b></h4></th>
+                        <th><h4><b>Excent</b></h4></th>
+                   
+            
+                        <th><h4><b>Amount</b></h4></th>
+                        <th><h4><b>Add to Cart</b></h4></th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in productList | orderBy:'PName'">
+                            <td>{{item.PR_ID}}</td>
+                            <td>{{item.PName}}</td>
+                            <td>{{item.PDescription}}</td>
+                            <td>{{item.Price}}</td>
+                            <td>{{item.Extent}}</td>
+                            
+                            <!--<td>{{item.DepartmentName}}</td>-->
+                            <td><input type="number" min="0" ng-model="amount" >
+                                        
+                            <td><a class="btn btn-danger btn-xs" ng-click="addToCart(item.PR_ID,amount)">
+                                        <span class="glyphicon glyphicon-expand"></span></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
+                </div>
+                <div align="center">
+                    <button  ng-click="sendOrder()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Send Order</button>
+                </div>
+         
+        
+        
     </div>
     <div class="modal-footer">
+    </div>
     </div>
   </div>
 </div>
