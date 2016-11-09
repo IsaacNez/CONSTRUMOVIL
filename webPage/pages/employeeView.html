@@ -10,7 +10,7 @@
     <script src="/angular-1.5.8/angular.js"></script>
     <script src="/angular-1.5.8/angular.min.js"></script>
     <script src="/js/jquery-3.1.0.js"  type="text/javascript"></script>
-    <script src="/js/employeesView.js"  type="text/javascript"></script>
+    <script src="/js/dependent.js"  type="text/javascript"></script>
     <link rel="stylesheet" href="/css/index.css">  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
     
     
 <!-- INICIO DE LA PAGINA-->
-<body ng-app="employeeView" >
+<body ng-app="dependentView" >
     <!--DIVISION PARA EL MENU DE LA PARTE SUPERIOR -->
     <div>
         <nav class="navbar navbar-inverse">
@@ -38,17 +38,37 @@
               <ul class="nav navbar-nav">
                     <li class="active"><a href="/pages/employeeView.html">Home</a></li>
                    <li class="dropdown">
-                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Create<span class="caret"></span></a>
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Orders<span class="caret"></span></a>
                       <ul class="dropdown-menu">
-                        <li id="newEmployee"><a href="#">New Employee</a></li>
-                        <li id="newStage"><a href="#">New Stage</a></li>
-                        <li id="newProject"><a href="#">New Project</a></li>
+                        
+                          <li id="orderMovil" role="button" data-toggle="modal" data-target="#movilModal"><a href="#">By Movil</a></li>
+                          <li id="orderStore" role="button" data-toggle="modal" data-target="#storeModal"><a href="#">By BranchStore</a></li>
+                       
                       </ul>
                     </li>
                     <li class="dropdown">
-                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Add<span class="caret"></span></a>
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Create<span class="caret"></span></a>
                       <ul class="dropdown-menu">
-                        <li id="addStageMaterial" role="button" data-toggle="modal" data-target="#stageMaterialModal"><a href="#">Stages-Materials</a></li>
+                          <li id="addEmployee" role="button" data-toggle="modal" data-target="#employeesModal"><a href="#">Employee</a></li>
+                          <li id="addProvider" role="button" data-toggle="modal" data-target="#providersModal"><a href="#">Providers</a></li>
+                          <li id="addProducts" role="button" data-toggle="modal" data-target="#productsModal"><a href="#">Products</a></li>
+                          <li id="addCategories" role="button" data-toggle="modal" data-target="#categoriesModal"><a href="#">Categories</a></li>
+                          <li id="addClients" role="button" data-toggle="modal" data-target="#clientsModal"><a href="#">Clients</a></li>
+                          <li id="addStores" role="button" data-toggle="modal" data-target="#storesModal"><a href="#">BranchStores</a></li>
+                          
+                      </ul>
+                    </li>
+                  
+                  <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Edit<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li id="editEmployee" role="button" data-toggle="modal" data-target="#editEmployeesModal"><a href="#">Employee</a></li>
+                          <li id="editProvider" role="button" data-toggle="modal" data-target="#editProvidersModal"><a href="#">Providers</a></li>
+                          <li id="editProducts" role="button" data-toggle="modal" data-target="#editProductsModal"><a href="#">Products</a></li>
+                          <li id="editCategories" role="button" data-toggle="modal" data-target="#editCategoriesModal"><a href="#">Categories</a></li>
+                          <li id="editClients" role="button" data-toggle="modal" data-target="#editClientsModal"><a href="#">Clients</a></li>
+                          <li id="editStores" role="button" data-toggle="modal" data-target="#editStoresModal"><a href="#">BranchStores</a></li>
+                          
                       </ul>
                     </li>
               </ul>
@@ -61,354 +81,497 @@
     </div>
     
     
-    
-    <!-- POP UP TO CREATE NEW USER-->
-    <div id="employeeModal" class="modal" ng-controller="employeeCtrl"  style="overflow-y: scroll;">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="close1" class="close">×</span>
-          <h2>New User</h2>
-        </div>
-        <div class="modal-body">
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="U_Name" >Write a user name</label>
-                    <input id=U_Name type="text" ng-model="U_Name" class="form-control" placeholder="Name">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="U_LName" >Write a user last name</label>
-                    <input id=U_LName type="text" ng-model="U_LName" class="form-control" placeholder="Last Name">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="U_ID" >Write a user ID</label>
-                    <input id=U_ID type="number" min="100000000" max="999999999" ng-model="U_ID" class="form-control" placeholder="ID">
-                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="sel1">Select user Role</label>
-                    <select type="text" name="R_ID" ng-model="R_ID" placeholder="Select User Role" class="form-control" id="sel1" >
-                    <option ng-repeat="item in rolelist">{{item.r_id}}-{{item.r_name}} </option>
-                    </select>
-                </div>
-                <div  class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="U_Code" >Write a user code</label>
-                    <input id=U_Code type="number" ng-model="U_Code" class="form-control" placeholder="Code">
-                    <span class="glyphicon glyphicon-option-horizontal form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="U_Phone" >Write a user phone</label>    
-                    <input id=U_Phone type="number" ng-model="U_Phone" class="form-control" placeholder="Phone">
-                    <span class="glyphicon glyphicon-phone form-control-feedback"></span>
-                </div>
-                
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="U_Password">Write a password</label>
-                    <input id=U_Password type="password" ng-model="U_Password" class="form-control" placeholder="Password">
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                </div>
-
-                <div align="center">
-                    <button  ng-click="addUser()" style="margin: 20px 0px 0px 0px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create User</button>
-                </div>
-        </div>
-        
-      </div>
-    </div>
-    
-    
-    <!-- POP UP CREATE NEW STAGES -->
-    <div id="stageModal" class="modal"  ng-controller="stageCtrl" style="overflow-y: scroll;" >
+      <!-- POP UP CREATE GET ORDER BY MOVIL -->
+    <div id="movilModal" class="modal"  ng-controller="movilCtrl" style="overflow-y: scroll;" >
       <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
               <span id="close2" class="close">×</span>
-              <h2>New Stage</h2>
+              <h2>Order by Movil</h2>
             </div>
             <div class="modal-body">
-                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                        <label for="S_Name">Write a stage name</label>
-                        <input id=S_Name type="text" ng-model="S_Name" class="form-control" placeholder="Stage Name">
-                        <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
-                    </div>
-                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                        <label for="S_Description">Write a stage description</label>
-                        <input id=S_Description type="text" ng-model="S_Description" class="form-control" placeholder="Description">
-                        <span class="glyphicon glyphicon-list-alt form-control-feedback"></span>
-                    </div>
-                    <div align="center">
-                        <button  ng-click="createStage()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Stage</button>
-                    </div>
+        
+        
+            <div class="table-responsive">
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead>
+                    <th>Store</th>
+                    <th>Client</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Products</th>
+                    
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="item in orders | orderBy:'S_ID'">
+                            
+
+                            <td>{{item.S_ID}}</td>
+                            <td>{{item.C_ID}}</td>
+                            <td>{{item.Phone}}</td>
+                            <td>{{item.Status}}</td>
+                            <td>{{item.Products}}</td>
+                            
+              
+ 
+                        
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            
+            
+    
+        </div>
+                  
+            </div>
+    </div> 
+ 
+      <!-- POP UP CREATE GET ORDER BY STORE -->
+    <div id="storeModal" class="modal"  ng-controller="storeCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Order by Store</h2>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead>
+                    <th>Store</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    
+                    
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="item in orders ">
+                            
+
+                            <td>{{item.S_ID}}</td>
+                            <td>{{item.C_ID}}</td>
+                            <td>{{item.OrderDate}}</td>
+                            <td>{{item.OStatus}}</td>
+                            <td>{{item.OPriotity}}</td>
+                            
+              
+ 
+                        
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+                  
+            </div>
+        </div> 
+    </div>
+    
+    
+      <!-- POP UP CREATE NEW EMPLOYEE -->
+    <div id="employeesModal" class="modal"  ng-controller="employeeCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>New Employee</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_BranchStore">Select a BrachStore</label>
+                    <select type="number" id = "E_BranchStore" class="form-control"  name="E_BranchStore" ng-model="branchStore" placeholder="Select a Brach Store" >
+                    <option ng-repeat="item in branchStores">{{item.S_ID}}</option>
+                    </select>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_Name">Write a Name</label>
+                    <input type="text" id="E_Name" name="E_Name" ng-model="E_Name"  class="form-control" placeholder="Name" >
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_LName">Write a LastName</label>
+                    <input type="text" id="E_LName" name="E_LName" ng-model="E_LName" class="form-control" placeholder="LastName">
+                </div>    
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_Pass">Write a Password</label>
+                    <input type="text" id= "E_Pass" name="E_Pass" ng-model="E_Pass" class="form-control" placeholder="Password">
+                </div>    
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_ID">Write an ID</label>
+                    <input type="number" id="E_ID" name="ID" ng-model="E_ID" class="form-control" placeholder="ID">
+                 </div>   
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_Address">Write an Address</label>
+                    <input type="text" id="E_Address" name="E_Address" ng-model="E_Address" class="form-control" placeholder="Address"> 
+                </div>    
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="E_Charge">Select a Charge</label>
+                    <select id= "E_Charge" name = "E_Charge" ng-model="E_Charge" class="form-control" >
+                        <option>Dependiente</option>
+                        <option>Manager</option>
+                        <option>Administrator</option></select>
+                </div>
+                
+                <div align="center">
+                    <button  ng-click="createEmployee()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Employee</button>
+                </div>   
+
+            
+                  
+            </div>
+        </div> 
+    </div>
+    
+      <!-- POP UP CREATE GET NEW PRODUCT -->
+    <div id="productsModal" class="modal"  ng-controller="productCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>New Product</h2>
+            </div>
+            <div class="modal-body">
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_ID" >Write a Product ID</label>
+                    <input id=P_ID type="number" ng-model="P_ID" class="form-control" placeholder="Product ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Name" >Write a Product Name</label>
+                    <input id=P_Name type="text" ng-model="P_Name" class="form-control" placeholder="Product Name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Description" >Write a Product Description</label>
+                    <input id=P_Description type="text" ng-model="P_Description" class="form-control" placeholder="Product Description">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Excent" >Write a Excent Status</label>
+                    <input id=P_Excent type="text" ng-model="P_Excent" class="form-control" placeholder="Excent">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Price" >Write a Product Price</label>
+                    <input id=P_Price type="number" ng-model="P_Price" class="form-control" placeholder="Product Price">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Amount" >Write an amount Product </label>
+                    <input id=P_Amount type="number" ng-model="P_Amount" class="form-control" placeholder="Product Amount">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_ID">Select Categorie</label>
+                    <select type="text" name="CA_ID" ng-model="CA_ID" id= "CA_ID" placeholder="Select User Role" class="form-control"  >
+                    <option ng-repeat="item in categories">{{item.CA_ID}}-{{item.CA_Name}} </option>
+                    </select>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_ID">Select Provider</label>
+                    <select type="text" name="PR_ID" ng-model="PR_ID" id = "PR_ID" placeholder="Select User Role" class="form-control" id="sel1" >
+                    <option ng-repeat="item in providers">{{item.PR_ID}}-{{item.PR_Name}} </option>
+                    </select>
+                </div>
+                <div align="center">
+                    <button  ng-click="createProduct()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Product</button>
+                </div>   
+         
+
+           
+                  
+            </div>
+        </div> 
+    </div>
+    
+      <!-- POP UP CREATE NEW PROVIDER -->
+    <div id="providersModal" class="modal"  ng-controller="providerCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>New Provider</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_ID" >Write a Provider ID</label>
+                    <input id=PR_ID type="number" ng-model="PR_ID" class="form-control" placeholder="Provider ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Name" >Write a Provider Name</label>
+                    <input id=PR_Name type="text" ng-model="PR_Name" class="form-control" placeholder="Provider Name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_LName" >Write a Provider LastName</label>
+                    <input id=PR_LName type="text" ng-model="PR_LName" class="form-control" placeholder="Provider lastName">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Address" >Write an Address</label>
+                    <input id=PR_Address type="text" ng-model="PR_Address" class="form-control" placeholder="Address">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Phone" >Write a Provider Phone</label>
+                    <input id=PR_Phone type="number" ng-model="PR_Phone" class="form-control" placeholder="Provider Phone">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+        
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Day" >Write a Birthdate Day  </label>
+                    <input id=PR_Day type="number" ng-model="PR_Day" class="form-control" placeholder="Day">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Month" >Write a Birthdate Month </label>
+                    <input id=PR_Month type="number" ng-model="PR_Month" class="form-control" placeholder="Month">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Year" >Write a Birthdate Year </label>
+                    <input id=PR_Year type="number" ng-model="PR_Year" class="form-control" placeholder="Year">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_BranchStore">Select a BrachStore</label>
+                    <select type="number" id = "PR_BranchStore" class="form-control"  name="PR_BranchStore" ng-model="PR_BranchStore" placeholder="Select a Brach Store" >
+                    <option ng-repeat="item in branchStores">{{item.S_ID}}</option>
+                    </select>
+                </div>
+                
+       
+                <div align="center">
+                    <button  ng-click="createProvider()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Provider</button>
+                </div>
+                  
+            </div>
+        </div> 
+    </div>
+
+
+        <!-- POP UP CREATE NEW CATEGORIE -->
+    <div id="categoriesModal" class="modal"  ng-controller="categoryCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>New Category</h2>
+            </div>
+            <div class="modal-body">
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_ID" >Write a Category ID</label>
+                    <input id=CA_ID type="number" ng-model="CA_ID" class="form-control" placeholder="Category ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_Description" >Write a Category Description</label>
+                    <input id=CA_Description type="text" ng-model="CA_Description" class="form-control" placeholder="Category Description">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div align="center">
+                    <button  ng-click="createCategory()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Client</button>
+                </div>  
+                  
+            </div>
+        </div> 
+    </div>
+
+         <!-- POP UP CREATE NEW STORE -->
+    <div id="storesModal" class="modal"  ng-controller="storesCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>New BrachStore</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_ID" >Write a BranchStore ID</label>
+                    <input id=S_ID type="number" ng-model="S_ID" class="form-control" placeholder="BranchStore ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_Name" >Write a BranchStore Name</label>
+                    <input id=S_Name type="text" ng-model="S_Name" class="form-control" placeholder="BranchStore Name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_Address" >Write a BranchStore Address</label>
+                    <input id=S_Address type="text" ng-model="S_Address" class="form-control" placeholder="BranchStore Address">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div align="center">
+                    <button  ng-click="createBranchStore()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Client</button>
+                </div>    
+            </div>
+        </div> 
+    </div>
+
+    
+         <!-- POP UP CREATE NEW CLIENT -->
+    <div id="clientsModal" class="modal"  ng-controller="clientCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>New Client</h2>
+            </div>
+            <div class="modal-body">
+           
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Name">Write a Client Name</label>
+                    <input type="text" id="C_Name" name="C_Name" ng-model="C_Name"  class="form-control" placeholder="Client Name" >
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_LName">Write a Client LastName</label>
+                    <input type="text" id="C_LName" name="C_LName" ng-model="C_LName" class="form-control" placeholder="Client LastName">
+                </div>  
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_ID">Write a Client ID</label>
+                    <input type="number" id="C_ID" name="C_ID" ng-model="C_ID" class="form-control" placeholder="Client ID">
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_BirthDate" >Write a Client BirthDate</label>
+                    <input id=C_BirthDate type="date" ng-model="C_BirthDate" class="form-control" placeholder="Client Birthdate">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Pass">Write a Password</label>
+                    <input type="text" id= "C_Pass" name="C_Pass" ng-model="C_Pass" class="form-control" placeholder="Client Password">
+                </div>    
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Phone" >Write a Client Phone</label>
+                    <input id=C_Phone type="number" ng-model="C_Phone" class="form-control" placeholder="Client Phone">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Address">Write an Address</label>
+                    <input type="text" id="C_Address" name="C_Address" ng-model="C_Address" class="form-control" placeholder="Client Address"> 
+                </div>  
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Penalization" >Write a Client Penalization</label>
+                    <input id=C_Penalization type="number" ng-model="C_Penalization" class="form-control" placeholder="Client Penalization">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                
+                 
+                <div align="center">
+                    <button  ng-click="createClient()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Client</button>
+                </div>   
+                  
+            </div>
+        </div> 
+    </div>
+
+    
+    
+      <!-- POP UP CREATE EDIT EMPLOYEES -->
+    <div id="editEmployeesModal" class="modal"  ng-controller="editEmployeeCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Employees</h2>
+            </div>
+            <div class="modal-body">
+                  
+            </div>
+        </div> 
+    </div>
+    
+      <!-- POP UP CREATE GET NEW PRODUCT -->
+    <div id="editProductsModal" class="modal"  ng-controller="editProductCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Products</h2>
+            </div>
+            <div class="modal-body">
+                  
+            </div>
+        </div> 
+    </div>
+    
+      <!-- POP UP CREATE NEW PROVIDER -->
+    <div id="editProvidersModal" class="modal"  ng-controller="editProviderCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Providers</h2>
+            </div>
+            <div class="modal-body">
+                  
+            </div>
+        </div> 
+    </div>
+    
+
+        <!-- POP UP CREATE NEW CATEGORIE -->
+    <div id="editCategoriesModal" class="modal"  ng-controller="editCategorieCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Categories</h2>
+            </div>
+            <div class="modal-body">
+                  
+            </div>
+        </div> 
+    </div>
+    
+         <!-- POP UP CREATE NEW STORE -->
+    <div id="editStoresModal" class="modal"  ng-controller="editStoresCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit BrachStores</h2>
+            </div>
+            <div class="modal-body">
+                  
+            </div>
+        </div> 
+    </div>
+    
+         <!-- POP UP CREATE NEW CLIENT -->
+    <div id="editClientsModal" class="modal"  ng-controller="editClientsCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Clients</h2>
+            </div>
+            <div class="modal-body">
+                  
             </div>
         </div> 
     </div>
     
     
     
-    <!-- POP UP TO CREATE NEW PROJECT -->
-    <div id="projectModal" class="modal" ng-controller= "projectCtrl" style="overflow-y: scroll;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="close3" class="close">×</span>
-          <h2>New Project</h2>
-        </div>
-        <div class="modal-body" >
-               <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="P_name" >Write a project name</label>
-                    <input id=P_Name type="text" ng-model="P_Name" class="form-control" placeholder="Name">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>    
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="P_Location" >Write a project location</label>
-                    <input id=P_Location type="text" ng-model="P_Location" class="form-control" placeholder="Location">
-                    <span class="glyphicon glyphicon-map-marker form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="sel1">Select Engineer or Architect:</label>
-                    <select type="text"  name="U_ID" ng-model="U_ID" placeholder="Select User" class="form-control" id="sel1" >
-                        <option ng-repeat="item in Users">{{item.u_id}}</option>
-                    </select>
-                </div>
-                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="sel1">Select a Client:</label>
-                    <select type="text"  name="C_ID" ng-model="C_ID" placeholder="Select User" class="form-control" id="sel1" >
-                        <option id="client" ng-repeat="item in Clients">{{item.u_id}}</option>
-                    </select>
-                </div>
-                <div align="center">
-                    <button  ng-click="createProject()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Project</button>
-                </div>   
-          </div>
-        </div>
-    </div>
-
-    
-    <!-- POP POP TO CREATE NEW PROJECT -->
-    <div id="stageProjectModal" class="modal fade"  role="dialog" style="z-index: 1600;"  ng-controller="stageProjectCtrl" style="overflow-y: scroll;"   >
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="close4" class="close">×</span>
-          <h2> Stage Information</h2>
-        </div>
-        <div class="modal-body">
-               <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="S_DateStart">Set Start Date</label>
-                   <input id=S_DateStart type="date" ng-model="S_DateStart" class="form-control" placeholder="Start Day">
-                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-            </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="S_DateEnd">Set End Date</label>
-                    <input id=S_DateEnd type="date" ng-model="S_DateEnd" class="form-control" placeholder="End Day">
-                    <span class="glyphicon glyphicon-log-out form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="S_Status">Write a stage status</label>    
-                    <input id=S_Status type="text" ng-model="S_Status" class="form-control" placeholder="Status">
-                    <span class="glyphicon glyphicon-thumbs-up form-control-feedback"></span>
-                </div>
-                <div align="center">
-                    <button  ng-click="setStage()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Add Stage</button>
-                </div>
-        </div>
-      </div>
-    </div>
-    
-    
-    <!-- POP POP TO CREATE NEW PROJECT -->
-    <div id="stageProductModal" class="modal fade "  role="dialog" style="z-index: 1600;"  ng-controller="stageProductCtrl" style="overflow-y: scroll;"   >
-      <div class="modal-content">
-        <div class="modal-header"> 
-          <span id="close5" class="close">×</span>
-          <h2> Add Products to Stage</h2>
-        </div>
-        <div class="modal-body">
-                    <label for="S_Name">Search Products</label>
-                            <input id=PR_Name type="text" ng-model="PR_Name" ng-change="getProduct()" class="form-control" placeholder="Write Product Name"><span class="glyphicon glyphicon-log-out form-control-feedback"></span>
-                    <div class="table-responsive">
-                        <table id="mytable" class="table table-bordred table-striped">
-                            <thead>
-                            <th style="width:10%">ID </th>
-                            <th style="width:20%">Name</th>
-                            <th style="width:30%"> Description</th>
-                            <th style="width:15%">Price</th>
-                            <th style="width:10%">Amount</th>
-                            <th style="width:15%">Add to Cart</th>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="item in productList">
-                                    <td >{{item.pr_id}}</td>
-                                    <td>{{item.PName}}</td>
-                                    <td>{{item.PDescription}}</td>
-                                    <td>{{item.Price}}</td>
-                                    <td><input type="number" min="0" ng-model="amount" >       
-                                    <td><a class="btn btn-danger btn-xs" ng-click="addToCart(item.pr_id,amount,item.Price)"><span class="glyphicon glyphicon-expand"></span></a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            
-      </div>
-
-
-    </div>  
-    
-    
-    <!-- POP POP TO ADD STAGES TO PROJECTS -->     
-    <div id="stageMaterialModal"  ng-controller="stageMaterialCtrl" style="overflow-y: scroll;" class="modal fade" role="dialog" style="z-index: 1400;"  > 
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="close6" class="close">×</span>
-          <h2> Project Management</h2>
-        </div>
-        <div class="modal-body">
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="sel1">Select a Project</label>
-                    <select type="text" ng-model="P_ID"  name="P_ID" ng-change="getProjectDetails()" placeholder="Select Project" class="form-control" id="P_ID" >
-                        <option ng-repeat="item in projectList">{{item.p_id}}</option>
-                    </select>
-                </div>
-                <div class="box box boxP" id="reward">
-
-                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                            <label for="S_Name">Search Stage</label>
-                            <input id=S_Name type="text" ng-model="S_Name" ng-change="getStages()" class="form-control" placeholder="Write Stage Name">
-
-                                <span class="glyphicon glyphicon-log-out form-control-feedback"></span>
-                    </div>
-                    <div class="box-body" style="margin: 20px 0px 0px 0px;">              
-
-                        <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
-                                <table id="table" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr >    
-                                            <th>
-                                                <h4><b>Stage Name</b>
-                                                </h4>
-                                            </th>  
-                                            <th >
-                                                <h4><b>Description</b>
-                                                <span id="value" class=""></span></h4>
-                                            </th>   
-                                            <th> 
-                                                <h4><b> Options </b>
-                                                <span id="value" class=""></span></h4>
-                                            </th>      
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                           <tr ng-repeat="item in stageList">  
-                                            <td>{{item.s_name}}</td>
-                                            <td>{{item.s_description}}</td>
-                                            <td>
-                                                <div  align="center" class="btn-group">    
-                                                    <a data-toggle="tooltip" title="Stage Information">
-
-                                                        <button id="stageInformation" type="button" class="btn btn-info" data-toggle="modal"      data-target="#stageProjectModal" ng-click="editStage(item)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-                                                    </a>
-                                                    <a data-toggle="tooltip" title="Add Products">
-                                                        <button id="addMaterials" type="button" class="btn btn-success" data-toggle="modal"      data-target="#stageProductModal"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-                                                    </a>
-                                                    <a data-toggle="tooltip" title="Create Stage">
-                                                        <button type="button" class="btn btn-primary" ng-click="sendOrder()"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                    </a> 
-                                                </div>
-                                            </td>
-                                           </tr>
-                                    </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div> 
-                        <h2>Project Information</h2>
-                        <div>
-                            <dl class="dl-horizontal" >
-                              <dt id ="name"></dt>
-                              <dd id ="p_name"></dd>
-                              <dt id ="locate"></dt>
-                              <dd id ="p_locate"></dd>
-                              <dt id ="enginner"></dt>
-                              <dd id ="p_enginner"></dd>
-                              <dt id ="owner"></dt>
-                              <dd id ="p_owner"></dd>
-                              <dt id ="budget"></dt>
-                              <dd id ="p_budget"></dd>  
-                            </dl>
-                        </div>
-                        <div class="panel-group" id="accordion" ng-repeat="item in stagesxProject" >
-                          <div class="panel panel-default">
-                            <div class="panel-heading">
-                              <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#item" >
-                                {{item.s_name}}</a>
-                              </h4>
-                            </div>
-                            <div id="item" class="panel-collapse collapse in">
-                              <div class="panel-body">
-                                  <div>
-                                    <h3>Stage Information</h3>
-                                      <dl class="dl-horizontal">
-                                    
-                                          <dt>Start Date</dt>
-                                          <dd>{{item.s_datestart}}</dd>
-                                          <dt>End Date</dt>
-                                          <dd>{{item.s_dateend}}</dd>
-                                          <dt>Status</dt>
-                                          <dd>{{item.s_status}}</dd>
-                                     </dl>
-                                  </div> 
-                                  <div>
-                                      <h3>Stage Products</h3>
-                                      <table id="cart" class="table-responsive table-hover table-condensed" table-responsive >
-                                            <thead>
-                                                <tr>
-                                                    <th style="width:50%">Product</th>
-                                                    <th style="width:10%">Price</th>
-                                                    <th style="width:8%">Quantity</th>
-                                                    <th style="width:22%" class="text-center">Subtotal</th>
-                                                    <th style="width:10%"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                               <tr ng-repeat="item2 in item.products" > 
-                                                    <td data-th="Product">
-                                                        <div class="row">
-                                                            <div class="col-sm-2 hidden-xs">{{item2.p_id}}</div>
-                                                            <div class="col-sm-10">
-                                                                {{item2.p_name}}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td data-th="Price">{{item2.p_price}}</td>
-                                                    <td data-th="Quantity">{{item2.p_quantity}}</td>
-                                                    <td data-th="Subtotal" class="text-center">{{item2.p_price*item2.p_quantity}}</td>
-                                                    <td class="actions" data-th=""></td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr class="visible-xs">
-                                                    <td class="text-center"><strong>{{item.gpd_budget}}</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td colspan="2" class="hidden-xs"></td>
-                                                    <td class="hidden-xs text-center"><strong>{{item.gpd_budget}}</strong></td>
-                                                    <td></td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                  </div>   
-                                </div>
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-              
-            </div>
-    </div>     
-  </div>
 </body>
 </html>
 
