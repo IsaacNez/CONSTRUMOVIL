@@ -191,7 +191,28 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@SAddress", sucursal.SAddress);
 
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(sucursal);
+                System.Diagnostics.Debug.Write("insertó");
+                tmp.action = "insert";
+                tmp.model = jsonString;
+                tmp.table = "Worker";
+                if (sucursal.ID_Seller != 0)
+                {
+                    tmp.seller.Add(sucursal.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+                System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+            }
+            catch (SqlException)
+            {
+
+            }
             myConnection.Close();
         }
     }

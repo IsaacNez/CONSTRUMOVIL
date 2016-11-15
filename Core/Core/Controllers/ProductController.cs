@@ -152,6 +152,20 @@ namespace WebApplication1.Controllers
             int rowDeleted = sqlCmd.ExecuteNonQuery();
             myConnection.Close();
         }
+        public void categoryxproduct(Product product)
+        {
+            SqlConnection CategoryConnection = new SqlConnection();
+            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            SqlCommand CateCmd = new SqlCommand();
+            CateCmd.CommandType = CommandType.Text;
+            CateCmd.CommandText = "INSERT INTO PC(CA_ID,PR_ID) Values(@CA_ID,@PR_ID)";
+            CateCmd.Connection = CategoryConnection;
+            CateCmd.Parameters.AddWithValue("@CA_ID", product.CA_ID);
+            CateCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
+            CategoryConnection.Open();
+            CateCmd.ExecuteNonQuery();
+            CategoryConnection.Close();
+        }
         [HttpPost]
         [ActionName("Post")]
         public void AddProduct(Product product)
@@ -175,20 +189,32 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@S_ID", product.S_ID);
 
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
-            myConnection.Close();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                categoryxproduct(product);
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(product);
+                System.Diagnostics.Debug.Write("insertó");
+                tmp.action = "insert";
+                tmp.model = jsonString;
+                tmp.table = "Worker";
+                if (product.ID_Seller != 0)
+                {
+                    tmp.seller.Add(product.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+                System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+            }
+            catch (SqlException)
+            {
 
-            SqlConnection CategoryConnection = new SqlConnection();
-            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand CateCmd = new SqlCommand();
-            CateCmd.CommandType = CommandType.Text;
-            CateCmd.CommandText = "INSERT INTO PC(CA_ID,PR_ID) Values(@CA_ID,@PR_ID)";
-            CateCmd.Connection = CategoryConnection;
-            CateCmd.Parameters.AddWithValue("@CA_ID",product.CA_ID);
-            CateCmd.Parameters.AddWithValue("@PR_ID",product.PR_ID);
-            CategoryConnection.Open();
-            CateCmd.ExecuteNonQuery();
-            CategoryConnection.Close();
+            }
+            myConnection.Close();
+            
+
+            
 
         }
     }

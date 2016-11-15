@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Core.Models
+namespace WebApplication1.Models
 {
     public class Statistic
     {
@@ -12,6 +12,7 @@ namespace Core.Models
         public int PRAmount { set; get; }
 
         public int SAmount { set; get; }
+        public int ID_Seller { get; set; }
 
     }
 }

@@ -17,6 +17,7 @@ namespace WebApplication1.Models
         public string CA_ID { get; set; }
         public int PDR_ID { get; set; }
         public int S_ID { get; set; }
+        public int ID_Seller { get; set; }
 
     }
 }

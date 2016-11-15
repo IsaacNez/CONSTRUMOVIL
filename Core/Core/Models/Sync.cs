@@ -18,6 +18,6 @@ namespace WebApplication1.Models
         public string action { get; set; }
         public string table { get; set; }
         public string model { get; set; }
-        public List<int> selles = new List<int>();
+        public List<int> seller = new List<int>();
     }
 }

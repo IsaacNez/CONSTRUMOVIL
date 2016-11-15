@@ -13,6 +13,7 @@ namespace WebApplication1.Models
         public string CAddress { get; set; }
         public string Charge { get; set; }
         public int S_ID { get; set; }
+        public int ID_Seller { get; set; }
         public string CPassword { get; set; }
 
     }

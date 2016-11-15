@@ -10,6 +10,6 @@ namespace WebApplication1.Models
     {
         public string CA_ID { get; set; }
         public string CDescription { get; set; }
-
+        public int ID_Seller { get; set; }
     }
 }

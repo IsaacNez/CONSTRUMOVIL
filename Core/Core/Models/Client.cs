@@ -18,6 +18,7 @@ namespace WebApplication1.Models
         public int Year { get; set; }
         public int Penalization { get; set; }
         public string CPassword { get; set; }
+        public int ID_Seller { get; set; }
 
     }
 }

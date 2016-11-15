@@ -158,7 +158,20 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@Penalization", client.Penalization);
             sqlCmd.Parameters.AddWithValue("@CPassword", client.CPassword);
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            Sync tmp = new Sync();
+            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string jsonString = javaScriptSerializer.Serialize(client);
+            sqlCmd.ExecuteNonQuery();
+            System.Diagnostics.Debug.Write("insertó");
+            tmp.action = "insert";
+            tmp.model = jsonString;
+            tmp.table = "Worker";
+            if (client.ID_Seller != 0)
+            {
+                tmp.seller.Add(client.ID_Seller);
+            }
+            Models.Tasks.tasks.Add(tmp);
+            System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
             myConnection.Close();
         }
     }

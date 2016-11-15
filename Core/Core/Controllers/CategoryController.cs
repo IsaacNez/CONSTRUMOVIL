@@ -163,6 +163,8 @@ namespace WebApplication1.Controllers
         [ActionName("Post")]
         public void AddCategory(Category category)
         {
+            Sync tmp = new Sync();
+
             System.Diagnostics.Debug.WriteLine(category.CA_ID);
             System.Diagnostics.Debug.WriteLine("entrando al post");
 
@@ -180,7 +182,19 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@CDescription", category.CDescription);
 
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string jsonString = javaScriptSerializer.Serialize(category);
+            sqlCmd.ExecuteNonQuery();
+            System.Diagnostics.Debug.Write("insertó");
+            tmp.action = "insert";
+            tmp.model = jsonString;
+            tmp.table = "Worker";
+            if (category.ID_Seller != 0)
+            {
+                tmp.seller.Add(category.ID_Seller);
+            }
+            Models.Tasks.tasks.Add(tmp);
+            System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
             myConnection.Close();
         }
     }

@@ -182,6 +182,20 @@ namespace WebApplication1.Controllers
             int rowDeleted = sqlCmd.ExecuteNonQuery();
             myConnection.Close();
         }
+        public void providerxneed(Provider provider)
+        {
+            SqlConnection CategoryConnection = new SqlConnection();
+            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            SqlCommand CateCmd = new SqlCommand();
+            CateCmd.CommandType = CommandType.Text;
+            CateCmd.CommandText = "INSERT INTO NEED(S_ID,PDR_ID) Values(@S_ID,@PDR_ID)";
+            CateCmd.Connection = CategoryConnection;
+            CateCmd.Parameters.AddWithValue("@S_ID", provider.S_ID);
+            CateCmd.Parameters.AddWithValue("@PDR_ID", provider.P_ID);
+            CategoryConnection.Open();
+            CateCmd.ExecuteNonQuery();
+            CategoryConnection.Close();
+        }
 
         [HttpPost]
         [ActionName("Post")]
@@ -210,20 +224,31 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@Month", provider.Month);
             sqlCmd.Parameters.AddWithValue("@Year", provider.Year);
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                providerxneed(provider);
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(provider);
+                System.Diagnostics.Debug.Write("insertó");
+                tmp.action = "insert";
+                tmp.model = jsonString;
+                tmp.table = "Worker";
+                if (provider.ID_Seller != 0)
+                {
+                    tmp.seller.Add(provider.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+                System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+            }
+            catch (SqlException)
+            {
+
+            }
             myConnection.Close();
 
-            SqlConnection CategoryConnection = new SqlConnection();
-            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand CateCmd = new SqlCommand();
-            CateCmd.CommandType = CommandType.Text;
-            CateCmd.CommandText = "INSERT INTO NEED(S_ID,PDR_ID) Values(@S_ID,@PDR_ID)";
-            CateCmd.Connection = CategoryConnection;
-            CateCmd.Parameters.AddWithValue("@S_ID", provider.S_ID);
-            CateCmd.Parameters.AddWithValue("@PDR_ID", provider.P_ID);
-            CategoryConnection.Open();
-            CateCmd.ExecuteNonQuery();
-            CategoryConnection.Close();
+        
         }
     }
 }

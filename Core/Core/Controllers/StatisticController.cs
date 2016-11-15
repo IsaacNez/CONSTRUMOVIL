@@ -10,7 +10,6 @@ using System.Data;
 using System.Text;
 using System.Web.Http.Cors;
 using System.Web.Http.Results;
-using Core.Models;
 using Newtonsoft.Json.Linq;
 
 namespace Core.Controllers

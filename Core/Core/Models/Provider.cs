@@ -16,6 +16,7 @@ namespace WebApplication1.Models
         public int Month { get; set; }
         public int Year { get; set; }
         public int S_ID { get; set; }
+        public int ID_Seller { get; set; }
 
     }
 }

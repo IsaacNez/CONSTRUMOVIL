@@ -10,7 +10,6 @@ using System.Data;
 using System.Text;
 using System.Web.Http.Cors;
 using System.Web.Http.Results;
-using Core.Models;
 using Newtonsoft.Json.Linq;
 
 namespace WebApplication1.Controllers
@@ -197,6 +196,20 @@ namespace WebApplication1.Controllers
                 sqlCmd2.Parameters.AddWithValue("@PRAmount", Convert.ToInt32(values[i]));
                 rowInserted = sqlCmd2.ExecuteNonQuery();
             }
+            Sync tmp = new Sync();
+            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string jsonString = javaScriptSerializer.Serialize(order);
+            
+            System.Diagnostics.Debug.Write("insertó");
+            tmp.action = "insert";
+            tmp.model = jsonString;
+            tmp.table = "Worker";
+            if (order.ID_Seller != 0)
+            {
+                tmp.seller.Add(order.ID_Seller);
+            }
+            Models.Tasks.tasks.Add(tmp);
+            System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
             myConnection.Close();
 
         }

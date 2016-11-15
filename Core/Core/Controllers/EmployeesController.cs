@@ -143,7 +143,7 @@ namespace WebApplication1.Controllers
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString; 
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            System.Diagnostics.Debug.WriteLine(myConnection.State);
+            System.Diagnostics.Debug.WriteLine(employee.CPassword);
 
             sqlCmd.CommandText = "INSERT INTO EMPLOYEE(E_ID,CName,LName,CAddress,Charge,S_ID,EPassword) Values(@E_ID,@CName,@LName,@CAddress,@Charge,@S_ID,@EPassword)";
             System.Diagnostics.Debug.WriteLine("generando comando");
@@ -162,15 +162,23 @@ namespace WebApplication1.Controllers
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(employee);
                 sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
                 tmp.table = "Worker";
-                Models.Tasks.
+                if (employee.ID_Seller != 0)
+                {
+                    tmp.seller.Add(employee.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+                System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+
+
             }
             catch (SqlException)
             {
                 System.Diagnostics.Debug.WriteLine("error while storing the employee");
-                throw new HttpResponseException(HttpStatusCode.BadRequest); 
+                
             }
             myConnection.Close();
         }

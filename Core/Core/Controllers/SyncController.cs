@@ -9,7 +9,7 @@ using System.Web.Http.Results;
 using System.Web.UI;
 using System.Web.Script.Serialization;
 
-namespace Core.Controllers
+namespace WebApplication1.Controllers
 {
     public class SyncController : ApiController
     {
@@ -33,17 +33,17 @@ namespace Core.Controllers
             List<Sync> values = new List<Sync>();
             string[] attr = attribute.Split(',');
             string[] ids = id.Split(',');
-            /*for (int i =0; i< Models.Tasks.tasks.Count; i++)
+            for (int i =0; i< Models.Tasks.tasks.Count; i++)
             {
-                for (int z=0; z< Models.Tasks.tasks[i].selles.Count;z++)
+                for (int z=0; z< Models.Tasks.tasks[i].seller.Count;z++)
                 {
-                    if (Models.Tasks.tasks[i].selles[z] == Convert.ToInt32(ids[0]))
+                    if (Models.Tasks.tasks[i].seller[z] == Convert.ToInt32(ids[0]))
                     {
                         values.Add(Models.Tasks.tasks[i]);
                     }
                 }
             }
-            */
+            
             return Json(values);
 
         }
