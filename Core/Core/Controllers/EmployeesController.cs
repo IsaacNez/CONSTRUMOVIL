@@ -134,6 +134,7 @@ namespace WebApplication1.Controllers
         [ActionName("Post")]
         public void AddEmployee(Employee employee)
         {
+            Sync tmp = new Sync();
             System.Diagnostics.Debug.WriteLine(employee.E_ID);
             System.Diagnostics.Debug.WriteLine(employee.CName);
             System.Diagnostics.Debug.WriteLine("entrando al post ");
@@ -156,7 +157,21 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@S_ID", employee.S_ID);
             sqlCmd.Parameters.AddWithValue("@EPassword", employee.CPassword);
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(employee);
+                sqlCmd.ExecuteNonQuery();
+                tmp.action = "insert";
+                tmp.model = jsonString;
+                tmp.table = "Worker";
+                Models.Tasks.
+            }
+            catch (SqlException)
+            {
+                System.Diagnostics.Debug.WriteLine("error while storing the employee");
+                throw new HttpResponseException(HttpStatusCode.BadRequest); 
+            }
             myConnection.Close();
         }
     }

@@ -11,6 +11,9 @@ namespace Core
     {
         protected void Application_Start()
         {
+            
+            Application["tasks"] = new List<int>();
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

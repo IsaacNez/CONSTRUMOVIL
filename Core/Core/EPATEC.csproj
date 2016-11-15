@@ -147,6 +147,7 @@
     <Compile Include="Models\Statistic.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Sync.cs" />
+    <Compile Include="Models\Tasks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

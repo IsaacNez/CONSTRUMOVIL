@@ -9,7 +9,7 @@ namespace Core
 {
     public static class WebApiConfig
     {
-        public List<Sync> tasks = new List<Sync>();
+   
             public static void Register(HttpConfiguration config)
             {
                 System.Diagnostics.Debug.WriteLine("Está llegando acá "+config.Routes.VirtualPathRoot.ToString());
