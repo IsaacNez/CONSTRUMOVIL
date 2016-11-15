@@ -25,7 +25,7 @@ namespace WebApplication1.Controllers
         }
         static private string GetConnectionString()
         {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
+            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATECA;"
                 + "Integrated Security=true;";
         }
 
@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
             string[] cvalue = id.Split(',');
             string action = "";
             CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE EMPLOYEE ", uattr, uvalue, cattr, cvalue);
+            action = updateString.UpdateConnectionString("UPDATE WORKER ", uattr, uvalue, cattr, cvalue);
             System.Diagnostics.Debug.WriteLine(action+" "+attr+" "+avalue);
 
             SqlConnection myConnection = new SqlConnection();
@@ -77,11 +77,11 @@ namespace WebApplication1.Controllers
             if (id != "undefined")
             {
                 SucursalController constructor = new SucursalController();
-                action =  constructor.FormConnectionString("EMPLOYEE", attr, ids);
+                action =  constructor.FormConnectionString("WORKER", attr, ids);
             }
             else
             {
-                action = "SELECT * FROM EMPLOYEE;";
+                action = "SELECT * FROM WORKER;";
             }
             
             System.Diagnostics.Debug.WriteLine(action);
@@ -123,7 +123,7 @@ namespace WebApplication1.Controllers
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = "DELETE FROM EMPLOYEE WHERE " + attribute + "='" + id + "';";
+            sqlCmd.CommandText = "DELETE FROM WORKER WHERE " + attribute + "='" + id + "';";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             int rowDeleted = sqlCmd.ExecuteNonQuery();
@@ -144,7 +144,7 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(employee.W_Password);
 
-            sqlCmd.CommandText = "INSERT INTO EMPLOYEE(W_ID,W_Name,W_LName,W_Address,W_Password) Values(@W_ID,@W_Name,@W_LName,@W_Address,@W_Password)";
+            sqlCmd.CommandText = "INSERT INTO WORKER(W_ID,W_Name,W_LName,W_Address,W_Password) Values(@W_ID,@W_Name,@W_LName,@W_Address,@W_Password)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
@@ -162,7 +162,7 @@ namespace WebApplication1.Controllers
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "Worker";
+                tmp.table = "WORKER";
                 if (employee.ID_Seller != 0)
                 {
                     tmp.seller.Add(employee.ID_Seller);
