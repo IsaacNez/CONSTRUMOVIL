@@ -197,3 +197,49 @@ app = angular.module('dependentView')
         });
     }
 }]);
+
+app = angular.module('dependentView')
+.controller('editEmployeesCtrl', ['$scope', '$http', function ($scope, $http) { 
+    
+    var employees;
+    $scope.getEmployees = function(){
+        $http.get('http://isaac:7549/api/employees/get/W_ID/undefined')
+                .then( function (response) {    
+                  $scope.employees = response.data;           
+            });
+    }
+    $scope.deleteEmployee = function(item){
+         console.log("eliminando");
+         $http.get('http://isaac:7549/api/employees/delete/W_ID/item')
+                .then( function (response) {    
+                  $scope.employees = response.data;           
+            });
+    }
+  
+    
+    
+}]);
+
+app = angular.module('dependentView')
+.controller('editEmployeeCtrl', ['$scope', '$http', function ($scope, $http) { 
+      $scope.updateEmployee = function () {
+        var Employee = {
+            "E_ID": $scope.idEmployee,
+            "CName": $scope.nameEmployee,
+            "LName": $scope.lnameEmployee,
+            "CAddress": $scope.addressEmployee,
+            "Password": $scope.passEmployee
+
+        }
+        console.log(Employee);
+        $http.post('http://isaac:7549/api/employees/post',Employee).
+        success(function (data, status, headers, config) {
+            alert('the new employee has been posted!');
+        }).
+        error(function (data, status, headers, config) {
+            alert('Error while posting the new employee')
+        });
+      
+    }
+
+}]);
