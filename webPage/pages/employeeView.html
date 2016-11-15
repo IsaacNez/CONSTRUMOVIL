@@ -280,7 +280,13 @@
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="PR_ID">Select Provider</label>
                     <select type="text" name="PR_ID" ng-model="PR_ID" id = "PR_ID" placeholder="Select User Role" class="form-control" id="sel1" >
-                    <option ng-repeat="item in providers">{{item.PR_ID}}-{{item.PR_Name}} </option>
+                    <option ng-repeat="item in providers">{{item.P_ID}}-{{item.P_Name}} </option>
+                    </select>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_ID">Select Sucursal</label>
+                    <select type="text" name="S_ID" ng-model="S_ID" id = "S_ID" placeholder="Select Sucursal" class="form-control" id="sel1" >
+                    <option ng-repeat="item in sucursals">{{item.S_ID}}-{{item.S_Name}} </option>
                     </select>
                 </div>
                 <div align="center">
