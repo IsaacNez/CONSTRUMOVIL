@@ -98,13 +98,12 @@ namespace WebApplication1.Controllers
             while (reader.Read())
             {
                 emp = new Employee();
-                emp.E_ID = Convert.ToInt32(reader.GetValue(0));
-                emp.CName = reader.GetValue(1).ToString();
-                emp.LName = reader.GetValue(2).ToString();
-                emp.CAddress = reader.GetValue(3).ToString();
-                emp.Charge = reader.GetValue(4).ToString();
-                emp.S_ID = Convert.ToInt32(reader.GetValue(5));
-                emp.CPassword = reader.GetValue(6).ToString();
+                emp.W_ID = Convert.ToInt32(reader.GetValue(0));
+                emp.W_Name = reader.GetValue(1).ToString();
+                emp.W_LName = reader.GetValue(2).ToString();
+                emp.W_Address = reader.GetValue(3).ToString();
+            
+                emp.W_Password = reader.GetValue(6).ToString();
                 values.Add(emp);
 
             }
@@ -135,27 +134,25 @@ namespace WebApplication1.Controllers
         public void AddEmployee(Employee employee)
         {
             Sync tmp = new Sync();
-            System.Diagnostics.Debug.WriteLine(employee.E_ID);
-            System.Diagnostics.Debug.WriteLine(employee.CName);
+            System.Diagnostics.Debug.WriteLine(employee.W_ID);
+            System.Diagnostics.Debug.WriteLine(employee.W_Name);
             System.Diagnostics.Debug.WriteLine("entrando al post ");
 
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString; 
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            System.Diagnostics.Debug.WriteLine(employee.CPassword);
+            System.Diagnostics.Debug.WriteLine(employee.W_Password);
 
-            sqlCmd.CommandText = "INSERT INTO EMPLOYEE(E_ID,CName,LName,CAddress,Charge,S_ID,EPassword) Values(@E_ID,@CName,@LName,@CAddress,@Charge,@S_ID,@EPassword)";
+            sqlCmd.CommandText = "INSERT INTO EMPLOYEE(W_ID,W_Name,W_LName,W_Address,W_Password) Values(@W_ID,@W_Name,@W_LName,@W_Address,@W_Password)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
-            sqlCmd.Parameters.AddWithValue("@E_ID", employee.E_ID);
-            sqlCmd.Parameters.AddWithValue("@CName", employee.CName);
-            sqlCmd.Parameters.AddWithValue("@LName", employee.LName);
-            sqlCmd.Parameters.AddWithValue("@CAddress", employee.CAddress);
-            sqlCmd.Parameters.AddWithValue("@Charge", employee.Charge);
-            sqlCmd.Parameters.AddWithValue("@S_ID", employee.S_ID);
-            sqlCmd.Parameters.AddWithValue("@EPassword", employee.CPassword);
+            sqlCmd.Parameters.AddWithValue("@E_ID", employee.W_ID);
+            sqlCmd.Parameters.AddWithValue("@CName", employee.W_Name);
+            sqlCmd.Parameters.AddWithValue("@LName", employee.W_LName);
+            sqlCmd.Parameters.AddWithValue("@CAddress", employee.W_Address);
+            sqlCmd.Parameters.AddWithValue("@EPassword", employee.W_Password);
             myConnection.Open();
             try
             {

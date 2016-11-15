@@ -18,12 +18,12 @@ namespace WebApplication1.Controllers
         public JsonResult<List<Sync>> Get(string attribute, string id)
         {
             Employee coso = new Employee();
-            coso.CAddress = "test";
+            coso.W_Address = "test";
             coso.Charge = "puta";
-            coso.CName = "tu vieja";
-            coso.CPassword = "test123";
-            coso.E_ID = 1;
-            coso.LName = "que te pario";
+            coso.W_Name = "tu vieja";
+            coso.W_Password = "test123";
+            coso.W_ID = 1;
+            coso.W_LName = "que te pario";
             coso.S_ID = 3;
             var javaScriptSerializer = new
                                             System.Web.Script.Serialization.JavaScriptSerializer();

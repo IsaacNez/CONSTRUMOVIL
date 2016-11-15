@@ -123,7 +123,7 @@ namespace WebApplication1.Controllers
             {
                 emp = new Category();
                 emp.CA_ID = reader.GetValue(0).ToString();
-                emp.CDescription = reader.GetValue(1).ToString();
+                emp.CA_Description = reader.GetValue(1).ToString();
                 values.Add(emp);
 
             }
@@ -174,12 +174,12 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO CATEGORY(CA_ID,CDescription) Values(@CA_ID,@CDescription)";
+            sqlCmd.CommandText = "INSERT INTO CATEGORY(CA_ID,CA_Description) Values(@CA_ID,@CA_Description)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@CA_ID", category.CA_ID);
-            sqlCmd.Parameters.AddWithValue("@CDescription", category.CDescription);
+            sqlCmd.Parameters.AddWithValue("@CA_Description", category.CA_Description);
 
             myConnection.Open();
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -188,7 +188,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.Write("insertó");
             tmp.action = "insert";
             tmp.model = jsonString;
-            tmp.table = "Worker";
+            tmp.table = "Category";
             if (category.ID_Seller != 0)
             {
                 tmp.seller.Add(category.ID_Seller);

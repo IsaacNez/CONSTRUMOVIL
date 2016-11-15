@@ -139,9 +139,9 @@
     </Compile>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\Worker.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\Ordering.cs" />
+    <Compile Include="Models\Orderxproduct.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\Statistic.cs" />

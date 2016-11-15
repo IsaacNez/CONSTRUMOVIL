@@ -9,7 +9,7 @@ namespace WebApplication1.Models
     public class Category
     {
         public string CA_ID { get; set; }
-        public string CDescription { get; set; }
+        public string CA_Description { get; set; }
         public int ID_Seller { get; set; }
     }
 }

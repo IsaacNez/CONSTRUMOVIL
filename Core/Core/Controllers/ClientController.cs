@@ -96,15 +96,14 @@ namespace WebApplication1.Controllers
             {
                 emp = new Client();
                 emp.C_ID = Convert.ToInt32(reader.GetValue(0));
-                emp.FName = reader.GetValue(1).ToString();
-                emp.LName = reader.GetValue(2).ToString();
-                emp.CAddress = reader.GetValue(3).ToString();
-                emp.Phone = Convert.ToInt32(reader.GetValue(4).ToString());
-                emp.Day = Convert.ToInt32(reader.GetValue(5).ToString());
-                emp.Month = Convert.ToInt32(reader.GetValue(6).ToString());
-                emp.Year = Convert.ToInt32(reader.GetValue(7).ToString());
-                emp.Penalization = Convert.ToInt32(reader.GetValue(8).ToString());
-                emp.CPassword = reader.GetValue(9).ToString();
+                emp.C_Name = reader.GetValue(1).ToString();
+                emp.C_LName = reader.GetValue(2).ToString();
+                emp.C_Address = reader.GetValue(3).ToString();
+                emp.C_Phone = Convert.ToInt32(reader.GetValue(4).ToString());
+                emp.C_Date = (DateTime)reader.GetValue(5);
+               
+                emp.C_Penalization = Convert.ToInt32(reader.GetValue(8).ToString());
+                
                 values.Add(emp);
             }
             
@@ -143,20 +142,18 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO CLIENT(C_ID,FName,LName,CAddress,Phone,Day,Month,Year, Penalization, CPassword) Values(@C_ID,@FName,@LName,@CAddress,@Phone,@Day,@Month,@Year, @Penalization,@CPassword)";
+            sqlCmd.CommandText = "INSERT INTO CLIENT(C_ID,C_Name,C_LName,C_Address,C_Phone,C_Date,C_Penalization) Values(@C_ID,@C_Name,@C_LName,@C_Address,@C_Phone,@C_Date,@C_Penalization)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@C_ID", client.C_ID);
-            sqlCmd.Parameters.AddWithValue("@FName", client.FName);
-            sqlCmd.Parameters.AddWithValue("@LName", client.LName);
-            sqlCmd.Parameters.AddWithValue("@CAddress", client.CAddress);
-            sqlCmd.Parameters.AddWithValue("@Phone", client.Phone);
-            sqlCmd.Parameters.AddWithValue("@Day", client.Day);
-            sqlCmd.Parameters.AddWithValue("@Month", client.Month);
-            sqlCmd.Parameters.AddWithValue("@Year", client.Year);
-            sqlCmd.Parameters.AddWithValue("@Penalization", client.Penalization);
-            sqlCmd.Parameters.AddWithValue("@CPassword", client.CPassword);
+            sqlCmd.Parameters.AddWithValue("@FName", client.C_Name);
+            sqlCmd.Parameters.AddWithValue("@LName", client.C_LName);
+            sqlCmd.Parameters.AddWithValue("@CAddress", client.C_Address);
+            sqlCmd.Parameters.AddWithValue("@Phone", client.C_Phone);
+            sqlCmd.Parameters.AddWithValue("@Day", client.C_Date);
+            sqlCmd.Parameters.AddWithValue("@Penalization", client.C_Penalization);
+            
             myConnection.Open();
             Sync tmp = new Sync();
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -165,7 +162,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.Write("insertó");
             tmp.action = "insert";
             tmp.model = jsonString;
-            tmp.table = "Worker";
+            tmp.table = "Client";
             if (client.ID_Seller != 0)
             {
                 tmp.seller.Add(client.ID_Seller);

@@ -93,11 +93,11 @@ namespace WebApplication1.Controllers
             {
                 emp = new Product();
                 emp.PR_ID = Convert.ToInt32(reader.GetValue(0).ToString());
-                emp.PName = reader.GetValue(1).ToString();
-                emp.Price = Convert.ToInt32(reader.GetValue(5).ToString());
-                emp.Extent = Convert.ToBoolean(reader.GetValue(2).ToString());
-                emp.PDescription = reader.GetValue(3).ToString();
-                emp.Quantity = Convert.ToInt32(reader.GetValue(4).ToString());
+                emp.PR_Name = reader.GetValue(1).ToString();
+                emp.PR_Price = Convert.ToInt32(reader.GetValue(5).ToString());
+                emp.PR_Exempt = Convert.ToBoolean(reader.GetValue(2).ToString());
+                emp.PR_Description = reader.GetValue(3).ToString();
+                emp.PR_Quantity = Convert.ToInt32(reader.GetValue(4).ToString());
                 values.Add(emp);
 
             }
@@ -180,12 +180,12 @@ namespace WebApplication1.Controllers
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
-            sqlCmd.Parameters.AddWithValue("@Price", product.Price);
-            sqlCmd.Parameters.AddWithValue("@Extent", product.Extent);
-            sqlCmd.Parameters.AddWithValue("@PDescription", product.PDescription);
-            sqlCmd.Parameters.AddWithValue("@Quantity", product.Quantity);
-            sqlCmd.Parameters.AddWithValue("@PName", product.PName);
-            sqlCmd.Parameters.AddWithValue("@P_ID", product.PDR_ID);
+            sqlCmd.Parameters.AddWithValue("@Price", product.PR_Price);
+            sqlCmd.Parameters.AddWithValue("@Extent", product.PR_Exempt);
+            sqlCmd.Parameters.AddWithValue("@PDescription", product.PR_Description);
+            sqlCmd.Parameters.AddWithValue("@Quantity", product.PR_Quantity);
+            sqlCmd.Parameters.AddWithValue("@PName", product.PR_Name);
+            sqlCmd.Parameters.AddWithValue("@P_ID", product.PR_ID);
             sqlCmd.Parameters.AddWithValue("@S_ID", product.S_ID);
 
             myConnection.Open();

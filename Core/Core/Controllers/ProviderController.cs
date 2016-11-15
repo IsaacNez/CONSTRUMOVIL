@@ -98,9 +98,9 @@ namespace WebApplication1.Controllers
             {
                 emp = new Provider();
                 emp.P_ID = Convert.ToInt32(reader.GetValue(0));
-                emp.PName = reader.GetValue(1).ToString();
-                emp.LName = reader.GetValue(2).ToString();
-                emp.PAddress = reader.GetValue(3).ToString();
+                emp.P_Name = reader.GetValue(1).ToString();
+                emp.P_LName = reader.GetValue(2).ToString();
+                emp.P_Address = reader.GetValue(3).ToString();
                 emp.Phone = Convert.ToInt32(reader.GetValue(4).ToString());
                 emp.Day = Convert.ToInt32(reader.GetValue(5).ToString());
                 emp.Month = Convert.ToInt32(reader.GetValue(6).ToString());
@@ -202,7 +202,7 @@ namespace WebApplication1.Controllers
         public void AddProvider(Provider provider)
         {
             System.Diagnostics.Debug.WriteLine(provider.P_ID);
-            System.Diagnostics.Debug.WriteLine(provider.PName);
+            System.Diagnostics.Debug.WriteLine(provider.P_Name);
             System.Diagnostics.Debug.WriteLine("entrando al post");
 
             SqlConnection myConnection = new SqlConnection();
@@ -216,9 +216,9 @@ namespace WebApplication1.Controllers
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@P_ID", provider.P_ID);
-            sqlCmd.Parameters.AddWithValue("@PName", provider.PName);
-            sqlCmd.Parameters.AddWithValue("@LName", provider.LName);
-            sqlCmd.Parameters.AddWithValue("@PAddress", provider.PAddress);
+            sqlCmd.Parameters.AddWithValue("@PName", provider.P_Name);
+            sqlCmd.Parameters.AddWithValue("@LName", provider.P_LName);
+            sqlCmd.Parameters.AddWithValue("@PAddress", provider.P_Address);
             sqlCmd.Parameters.AddWithValue("@Phone", provider.Phone);
             sqlCmd.Parameters.AddWithValue("@Day", provider.Day);
             sqlCmd.Parameters.AddWithValue("@Month", provider.Month);

@@ -123,8 +123,8 @@ namespace WebApplication1.Controllers
             {
                 emp = new Sucursal();
                 emp.S_ID = Convert.ToInt32(reader.GetValue(0).ToString());
-                emp.SName = reader.GetValue(1).ToString();
-                emp.SAddress = reader.GetValue(2).ToString();
+                emp.S_Name = reader.GetValue(1).ToString();
+                emp.S_Address = reader.GetValue(2).ToString();
                 values.Add(emp);
 
             }
@@ -187,8 +187,8 @@ namespace WebApplication1.Controllers
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@S_ID", sucursal.S_ID);
-            sqlCmd.Parameters.AddWithValue("@SName", sucursal.SName);
-            sqlCmd.Parameters.AddWithValue("@SAddress", sucursal.SAddress);
+            sqlCmd.Parameters.AddWithValue("@SName", sucursal.S_Name);
+            sqlCmd.Parameters.AddWithValue("@SAddress", sucursal.S_Address);
 
             myConnection.Open();
             try

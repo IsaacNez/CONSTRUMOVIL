@@ -97,11 +97,10 @@ namespace WebApplication1.Controllers
             {
                 emp = new Order();
                 emp.O_ID = Convert.ToInt32(reader.GetValue(6));
-                emp.OPriority = Convert.ToInt32(reader.GetValue(0).ToString());
-                emp.OStatus = reader.GetValue(1).ToString();
-                emp.OrderDate = Convert.ToDateTime(reader.GetValue(2).ToString());
+                emp.O_Priority = Convert.ToInt32(reader.GetValue(0).ToString());
+                emp.O_Status = reader.GetValue(1).ToString();
+                emp.O_Date = Convert.ToDateTime(reader.GetValue(2).ToString());
                 emp.S_ID = Convert.ToInt32(reader.GetValue(3).ToString());
-                emp.OPlatform = reader.GetValue(4).ToString();
                 emp.C_ID = Convert.ToInt32(reader.GetValue(5).ToString());
                 values.Add(emp);
             }
@@ -159,6 +158,31 @@ namespace WebApplication1.Controllers
             int rowDeleted = sqlCmd.ExecuteNonQuery();
             myConnection.Close();
         }
+        public void orderxproduct(Order order)
+        {
+            string[] products = order.Products.Split(',');
+            string[] values = order.Amount.Split(',');
+            string action = "INSERT INTO ORDERXPRODUCT(OXP_ID,O_ID,PR_Name,PR_Amount PR_Price) Values(@OXP_ID,@O_ID,@PR_Name,@PR_Amount,@PR_Price)";
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            SqlCommand sqlCmd = new SqlCommand();
+            myConnection.Open();
+            
+            sqlCmd.CommandType = CommandType.Text;
+            for (int i = 0; i < products.Length; i++)
+            {
+                Random rnd = new Random();
+                SqlCommand sqlCmd2 = new SqlCommand();
+                sqlCmd2.Connection = myConnection;
+                sqlCmd2.CommandText = action;
+                sqlCmd2.Parameters.AddWithValue("@OXP_ID", rnd);
+                sqlCmd2.Parameters.AddWithValue("@O_ID", order.O_ID);
+                sqlCmd2.Parameters.AddWithValue("@PR_Name", products[i]);
+                sqlCmd2.Parameters.AddWithValue("@PR_Amount", Convert.ToInt32(values[i]));
+                sqlCmd2.Parameters.AddWithValue("@PR_Price", 0);
+                sqlCmd2.ExecuteNonQuery();
+            }
+        }
 
         [ActionName("post")]
         public void AddOrder(Order order)
@@ -173,43 +197,41 @@ namespace WebApplication1.Controllers
             myConnection.Open();
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
-            sqlCmd.CommandText = "INSERT INTO EORDER(O_ID,OPriority,OStatus, OrderDate,S_ID,OPlatform,C_ID) Values(@O_ID,@OPriority,@OStatus, @OrderDate,@S_ID,@OPlatform,@C_ID)";
+            sqlCmd.CommandText = "INSERT INTO EORDER(O_ID,O_Priority,O_Status,O_Date,O_PPhone,S_ID,W_ID,C_ID) Values(@O_ID,@O_Priority,@O_Status,@O_Date,@O_PPhone,@S_ID,@W_ID,@C_ID)";
             System.Diagnostics.Debug.WriteLine("generando comando");
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@O_ID", order.O_ID);
-            sqlCmd.Parameters.AddWithValue("@OPriority", order.OPriority);
-            sqlCmd.Parameters.AddWithValue("@OStatus", order.OStatus);
-            sqlCmd.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+            sqlCmd.Parameters.AddWithValue("@O_Priority", order.O_Priority);
+            sqlCmd.Parameters.AddWithValue("@O_Status", order.O_Status);
+            sqlCmd.Parameters.AddWithValue("@O_Date", order.O_Date);
+            sqlCmd.Parameters.AddWithValue("@O_PPhone", order.O_PPhone);
+            sqlCmd.Parameters.AddWithValue("@W_ID", order.W_ID);
             sqlCmd.Parameters.AddWithValue("@S_ID", order.S_ID);
-            sqlCmd.Parameters.AddWithValue("@OPlatform", order.OPlatform);
             sqlCmd.Parameters.AddWithValue("@C_ID", order.C_ID);
-            rowInserted = sqlCmd.ExecuteNonQuery();
             
-            string action = "INSERT INTO HAS(O_ID,PRName,PRAmount) Values(@O_ID,@PRName,@PRAmount)";
-            for (int i = 0; i< products.Length; i++)
+
+            try
             {
-                SqlCommand sqlCmd2 = new SqlCommand();
-                sqlCmd2.Connection = myConnection;
-                sqlCmd2.CommandText = action;
-                sqlCmd2.Parameters.AddWithValue("@O_ID", order.O_ID);
-                sqlCmd2.Parameters.AddWithValue("@PRName", products[i]);
-                sqlCmd2.Parameters.AddWithValue("@PRAmount", Convert.ToInt32(values[i]));
-                rowInserted = sqlCmd2.ExecuteNonQuery();
+                Sync tmp = new Sync();
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(order);
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("insertó");
+                tmp.action = "insert";
+                tmp.model = jsonString;
+                tmp.table = "Order";
+                if (order.ID_Seller != 0)
+                {
+                    tmp.seller.Add(order.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+                System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
             }
-            Sync tmp = new Sync();
-            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            string jsonString = javaScriptSerializer.Serialize(order);
-            
-            System.Diagnostics.Debug.Write("insertó");
-            tmp.action = "insert";
-            tmp.model = jsonString;
-            tmp.table = "Worker";
-            if (order.ID_Seller != 0)
+            catch (SqlException)
             {
-                tmp.seller.Add(order.ID_Seller);
+                System.Diagnostics.Debug.WriteLine("error while storing the employee");
+
             }
-            Models.Tasks.tasks.Add(tmp);
-            System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
             myConnection.Close();
 
         }
