@@ -19,12 +19,12 @@ namespace WebApplication1.Controllers
         {
             Employee coso = new Employee();
             coso.W_Address = "test";
-            coso.Charge = "puta";
+            
             coso.W_Name = "tu vieja";
             coso.W_Password = "test123";
             coso.W_ID = 1;
             coso.W_LName = "que te pario";
-            coso.S_ID = 3;
+            
             var javaScriptSerializer = new
                                             System.Web.Script.Serialization.JavaScriptSerializer();
             string jsonString = javaScriptSerializer.Serialize(coso);

@@ -160,8 +160,8 @@ namespace WebApplication1.Controllers
         }
         public void orderxproduct(Order order)
         {
-            string[] products = order.Products.Split(',');
-            string[] values = order.Amount.Split(',');
+            string[] products = order.PR_Name.Split(',');
+            string[] values = order.PR_Amount.Split(',');
             string action = "INSERT INTO ORDERXPRODUCT(OXP_ID,O_ID,PR_Name,PR_Amount PR_Price) Values(@OXP_ID,@O_ID,@PR_Name,@PR_Amount,@PR_Price)";
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -187,10 +187,10 @@ namespace WebApplication1.Controllers
         [ActionName("post")]
         public void AddOrder(Order order)
         {
-            int rowInserted = 0;
+            
             System.Diagnostics.Debug.WriteLine(order.C_ID);
-            string[] products = order.Products.Split(',');
-            string[] values = order.Amount.Split(',');
+            string[] products = order.PR_Name.Split(',');
+            string[] values = order.PR_Amount.Split(',');
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
@@ -219,7 +219,7 @@ namespace WebApplication1.Controllers
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "Order";
+                tmp.table = "EORDER";
                 if (order.ID_Seller != 0)
                 {
                     tmp.seller.Add(order.ID_Seller);

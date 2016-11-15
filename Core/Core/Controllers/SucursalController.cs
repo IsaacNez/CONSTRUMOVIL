@@ -182,13 +182,13 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO SUCURSAL(S_ID,SName,SAddress) Values(@S_ID,@SName,@SAddress)";
+            sqlCmd.CommandText = "INSERT INTO SUCURSAL(S_ID,S_Name,S_Address) Values(@S_ID,@S_Name,@S_Address)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@S_ID", sucursal.S_ID);
-            sqlCmd.Parameters.AddWithValue("@SName", sucursal.S_Name);
-            sqlCmd.Parameters.AddWithValue("@SAddress", sucursal.S_Address);
+            sqlCmd.Parameters.AddWithValue("@S_Name", sucursal.S_Name);
+            sqlCmd.Parameters.AddWithValue("@S_Address", sucursal.S_Address);
 
             myConnection.Open();
             try
@@ -201,7 +201,7 @@ namespace WebApplication1.Controllers
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "Worker";
+                tmp.table = "SUCURSAL";
                 if (sucursal.ID_Seller != 0)
                 {
                     tmp.seller.Add(sucursal.ID_Seller);

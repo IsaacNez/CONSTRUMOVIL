@@ -147,12 +147,12 @@ namespace WebApplication1.Controllers
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@C_ID", client.C_ID);
-            sqlCmd.Parameters.AddWithValue("@FName", client.C_Name);
-            sqlCmd.Parameters.AddWithValue("@LName", client.C_LName);
-            sqlCmd.Parameters.AddWithValue("@CAddress", client.C_Address);
-            sqlCmd.Parameters.AddWithValue("@Phone", client.C_Phone);
-            sqlCmd.Parameters.AddWithValue("@Day", client.C_Date);
-            sqlCmd.Parameters.AddWithValue("@Penalization", client.C_Penalization);
+            sqlCmd.Parameters.AddWithValue("@C_Name", client.C_Name);
+            sqlCmd.Parameters.AddWithValue("@C_LName", client.C_LName);
+            sqlCmd.Parameters.AddWithValue("@C_Address", client.C_Address);
+            sqlCmd.Parameters.AddWithValue("@C_Phone", client.C_Phone);
+            sqlCmd.Parameters.AddWithValue("@C_Date", client.C_Date);
+            sqlCmd.Parameters.AddWithValue("@C_Penalization", client.C_Penalization);
             
             myConnection.Open();
             Sync tmp = new Sync();
@@ -162,7 +162,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.Write("insertó");
             tmp.action = "insert";
             tmp.model = jsonString;
-            tmp.table = "Client";
+            tmp.table = "CLIENT";
             if (client.ID_Seller != 0)
             {
                 tmp.seller.Add(client.ID_Seller);

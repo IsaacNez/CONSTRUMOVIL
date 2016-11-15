@@ -188,7 +188,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.Write("insertó");
             tmp.action = "insert";
             tmp.model = jsonString;
-            tmp.table = "Category";
+            tmp.table = "CATEGORY";
             if (category.ID_Seller != 0)
             {
                 tmp.seller.Add(category.ID_Seller);

@@ -152,40 +152,29 @@ namespace WebApplication1.Controllers
             int rowDeleted = sqlCmd.ExecuteNonQuery();
             myConnection.Close();
         }
-        public void categoryxproduct(Product product)
-        {
-            SqlConnection CategoryConnection = new SqlConnection();
-            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand CateCmd = new SqlCommand();
-            CateCmd.CommandType = CommandType.Text;
-            CateCmd.CommandText = "INSERT INTO PC(CA_ID,PR_ID) Values(@CA_ID,@PR_ID)";
-            CateCmd.Connection = CategoryConnection;
-            CateCmd.Parameters.AddWithValue("@CA_ID", product.CA_ID);
-            CateCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
-            CategoryConnection.Open();
-            CateCmd.ExecuteNonQuery();
-            CategoryConnection.Close();
-        }
+        
         [HttpPost]
         [ActionName("Post")]
         public void AddProduct(Product product)
         {
-            
+            System.Diagnostics.Debug.Write(product.PR_ID);
+
+
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
 
-            sqlCmd.CommandText = "INSERT INTO PRODUCT(PR_ID,Price,Extent,PDescription,Quantity,PName,P_ID,S_ID) Values(@PR_ID,@Price,@Extent,@PDescription,@Quantity,@PName,@P_ID,@S_ID)";
+            sqlCmd.CommandText = "INSERT INTO PRODUCT(PR_ID,PR_Price,PR_Exemt,PR_Description,PR_Quantity,PR_Name,P_ID,S_ID) Values(@PR_ID,@PR_Price,@PR_Exemt,@PR_Description,@PR_Quantity,@PR_Name,@P_ID,@S_ID)";
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
-            sqlCmd.Parameters.AddWithValue("@Price", product.PR_Price);
-            sqlCmd.Parameters.AddWithValue("@Extent", product.PR_Exempt);
-            sqlCmd.Parameters.AddWithValue("@PDescription", product.PR_Description);
-            sqlCmd.Parameters.AddWithValue("@Quantity", product.PR_Quantity);
-            sqlCmd.Parameters.AddWithValue("@PName", product.PR_Name);
-            sqlCmd.Parameters.AddWithValue("@P_ID", product.PR_ID);
+            sqlCmd.Parameters.AddWithValue("@PR_Price", product.PR_Price);
+            sqlCmd.Parameters.AddWithValue("@PR_Exempt", product.PR_Exempt);
+            sqlCmd.Parameters.AddWithValue("@PR_Description", product.PR_Description);
+            sqlCmd.Parameters.AddWithValue("@PR_Quantity", product.PR_Quantity);
+            sqlCmd.Parameters.AddWithValue("@PR_Name", product.PR_Name);
+            sqlCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
             sqlCmd.Parameters.AddWithValue("@S_ID", product.S_ID);
 
             myConnection.Open();
@@ -193,13 +182,13 @@ namespace WebApplication1.Controllers
             {
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
-                categoryxproduct(product);
+                //categoryxproduct(product);
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(product);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "Worker";
+                tmp.table = "PROVIDER";
                 if (product.ID_Seller != 0)
                 {
                     tmp.seller.Add(product.ID_Seller);
@@ -217,5 +206,21 @@ namespace WebApplication1.Controllers
             
 
         }
+        /*
+        public void categoryxproduct(Product product)
+        {
+            SqlConnection CategoryConnection = new SqlConnection();
+            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            SqlCommand CateCmd = new SqlCommand();
+            CateCmd.CommandType = CommandType.Text;
+            CateCmd.CommandText = "INSERT INTO PC(CA_ID,PR_ID) Values(@CA_ID,@PR_ID)";
+            CateCmd.Connection = CategoryConnection;
+            CateCmd.Parameters.AddWithValue("@CA_ID", product.CA_ID);
+            CateCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
+            CategoryConnection.Open();
+            CateCmd.ExecuteNonQuery();
+            CategoryConnection.Close();
+        }
+        */
     }
 }

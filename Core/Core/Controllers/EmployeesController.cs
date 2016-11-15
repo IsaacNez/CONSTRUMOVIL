@@ -103,7 +103,7 @@ namespace WebApplication1.Controllers
                 emp.W_LName = reader.GetValue(2).ToString();
                 emp.W_Address = reader.GetValue(3).ToString();
             
-                emp.W_Password = reader.GetValue(6).ToString();
+                emp.W_Password = reader.GetValue(4).ToString();
                 values.Add(emp);
 
             }
@@ -148,11 +148,11 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
-            sqlCmd.Parameters.AddWithValue("@E_ID", employee.W_ID);
-            sqlCmd.Parameters.AddWithValue("@CName", employee.W_Name);
-            sqlCmd.Parameters.AddWithValue("@LName", employee.W_LName);
-            sqlCmd.Parameters.AddWithValue("@CAddress", employee.W_Address);
-            sqlCmd.Parameters.AddWithValue("@EPassword", employee.W_Password);
+            sqlCmd.Parameters.AddWithValue("@W_ID", employee.W_ID);
+            sqlCmd.Parameters.AddWithValue("@W_Name", employee.W_Name);
+            sqlCmd.Parameters.AddWithValue("@W_LName", employee.W_LName);
+            sqlCmd.Parameters.AddWithValue("@W_Address", employee.W_Address);
+            sqlCmd.Parameters.AddWithValue("@W_Password", employee.W_Password);
             myConnection.Open();
             try
             {
@@ -163,7 +163,6 @@ namespace WebApplication1.Controllers
                 tmp.action = "insert";
                 tmp.model = jsonString;
                 tmp.table = "WORKER";
-                if (employee.ID_Seller != 0)
                 {
                     tmp.seller.Add(employee.ID_Seller);
                 }

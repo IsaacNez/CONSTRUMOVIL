@@ -181,9 +181,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1153</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://DESKTOP-E6QPTVT:7549</IISUrl>
+          <IISUrl>http://bryan:7580</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://DESKTOP-E6QPTVT:7549</IISAppRootUrl>
+          <IISAppRootUrl>http://bryan:7580</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

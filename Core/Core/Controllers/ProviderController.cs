@@ -101,9 +101,7 @@ namespace WebApplication1.Controllers
                 emp.P_Name = reader.GetValue(1).ToString();
                 emp.P_LName = reader.GetValue(2).ToString();
                 emp.P_Address = reader.GetValue(3).ToString();
-                emp.Phone = Convert.ToInt32(reader.GetValue(4).ToString());
-                emp.Day = Convert.ToInt32(reader.GetValue(5).ToString());
-                emp.Month = Convert.ToInt32(reader.GetValue(6).ToString());
+                emp.P_Date = (DateTime)reader.GetValue(4);
                 values.Add(emp);
 
 
@@ -182,20 +180,7 @@ namespace WebApplication1.Controllers
             int rowDeleted = sqlCmd.ExecuteNonQuery();
             myConnection.Close();
         }
-        public void providerxneed(Provider provider)
-        {
-            SqlConnection CategoryConnection = new SqlConnection();
-            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand CateCmd = new SqlCommand();
-            CateCmd.CommandType = CommandType.Text;
-            CateCmd.CommandText = "INSERT INTO NEED(S_ID,PDR_ID) Values(@S_ID,@PDR_ID)";
-            CateCmd.Connection = CategoryConnection;
-            CateCmd.Parameters.AddWithValue("@S_ID", provider.S_ID);
-            CateCmd.Parameters.AddWithValue("@PDR_ID", provider.P_ID);
-            CategoryConnection.Open();
-            CateCmd.ExecuteNonQuery();
-            CategoryConnection.Close();
-        }
+
 
         [HttpPost]
         [ActionName("Post")]
@@ -211,30 +196,27 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO EPROVIDER(P_ID,PName,LName,PAddress,Phone,Day,Month,Year) Values(@P_ID,@PName,@LName,@PAddress,@Phone,@Day,@Month,@Year)";
+            sqlCmd.CommandText = "INSERT INTO EPROVIDER(P_ID,P_Name,P_LName,P_Address,P_Date) Values(@P_ID,@P_Name,@P_LName,@P_Address,@P_Date)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@P_ID", provider.P_ID);
-            sqlCmd.Parameters.AddWithValue("@PName", provider.P_Name);
-            sqlCmd.Parameters.AddWithValue("@LName", provider.P_LName);
-            sqlCmd.Parameters.AddWithValue("@PAddress", provider.P_Address);
-            sqlCmd.Parameters.AddWithValue("@Phone", provider.Phone);
-            sqlCmd.Parameters.AddWithValue("@Day", provider.Day);
-            sqlCmd.Parameters.AddWithValue("@Month", provider.Month);
-            sqlCmd.Parameters.AddWithValue("@Year", provider.Year);
+            sqlCmd.Parameters.AddWithValue("@P_Name", provider.P_Name);
+            sqlCmd.Parameters.AddWithValue("@P_LName", provider.P_LName);
+            sqlCmd.Parameters.AddWithValue("@P_Address", provider.P_Address);            
+            sqlCmd.Parameters.AddWithValue("@P_Date", provider.P_Date);
             myConnection.Open();
             try
             {
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
-                providerxneed(provider);
+                
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(provider);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "Worker";
+                tmp.table = "PROVIDER";
                 if (provider.ID_Seller != 0)
                 {
                     tmp.seller.Add(provider.ID_Seller);
