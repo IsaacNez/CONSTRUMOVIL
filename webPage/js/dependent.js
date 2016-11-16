@@ -21,9 +21,14 @@ app = angular.module('dependentView')
 .controller('employeeCtrl', ['$scope', '$http', function ($scope, $http) {
     var branchStores;
     var employees;
+    var Charges;
     $http.get(link + '/api/sucursal/get/S_ID/undefined')
             .then( function (response) {    
               $scope.branchStores = response.data;           
+        });
+     $http.get(link + '/api/role/get/R_ID/undefined')
+            .then( function (response) {    
+              $scope.Charges = response.data;           
         });
       
     $scope.createEmployee = function () {
@@ -32,7 +37,8 @@ app = angular.module('dependentView')
             "W_Name": $scope.E_Name,
             "W_LName": $scope.E_LName,
             "W_Address": $scope.E_Address,
-            "W_Password": $scope.E_Pass
+            "W_Password": $scope.E_Pass,
+            "R_ID":$scope.E_Charge
             
         }
         console.log(Employee);
@@ -102,14 +108,11 @@ app = angular.module('dependentView')
        // var branch= document.getElementById("branchStore");
         var Provider = {
             "P_ID": $scope.PR_ID,
-            "PName": $scope.PR_Name,
-            "LName": $scope.PR_LName,
-            "PAddress": $scope.PR_Address,
-            "Phone": $scope.PR_Phone,
-            "Day": $scope.PR_Day,
-            "Month": $scope.PR_Month,
-            "Year": $scope.PR_Year,
-            "S_ID": $scope.PR_BranchStore
+            "P_Name": $scope.PR_Name,
+            "P_LName": $scope.PR_LName,
+            "P_Address": $scope.PR_Address,
+            "P_Date": $scope.PR_Date,
+            "P_Status": $scope.PR_Status
         }
         console.log(Provider);
         $http.post(link + '/api/provider/post',Provider).
@@ -128,7 +131,8 @@ app = angular.module('dependentView')
     $scope.createCategory = function () {
         var category = {
             "CA_ID": $scope.CA_ID,
-            "CDescription": $scope.CA_Description
+            "CDescription": $scope.CA_Description,
+            "CA_Status":$scope.CA_Status
             
         }
         console.log(category);
@@ -151,8 +155,8 @@ app = angular.module('dependentView')
 
         var Branch = {
             "S_ID": $scope.S_ID,
-            "SName": $scope.S_Name,
-            "SAddress": $scope.S_Address,
+            "S_Name": $scope.S_Name,
+            "S_Address": $scope.S_Address,
           
             
         }
@@ -176,23 +180,17 @@ app = angular.module('dependentView')
     var month;
 
     $scope.createClient = function () {
-        console.log("here");
-        date = new Date($scope.C_BirthDate);
-        day = date.getDate();
-        year = date.getFullYear();
+      
         
         month = date.getMonth() + 1;
         var Client = {
             "C_ID": $scope.C_ID,
-            "FName": $scope.C_Name,
-            "LName": $scope.C_LName,
-            "CAddress": $scope.C_Address,
-            "Phone": $scope.C_Phone,
-            "Day":day,
-            "Month":month,
-            "Year":year,
-            "Penalization":$scope.C_Penalization,
-            "CPassword":$scope.C_Pass
+            "C_Name": $scope.C_Name,
+            "C_LName": $scope.C_LName,
+            "C_Address": $scope.C_Address,
+            "C_Phone": $scope.C_Phone,
+            "C_Date": $scope.C_BirthDate,      "C_Penalization":$scope.C_Penalization,
+            "C_Password":$scope.C_Pass
         }
         console.log(Client); 
         $http.post(link + '/api/client/post',Client).
@@ -231,12 +229,11 @@ app = angular.module('dependentView')
 .controller('editEmployeeCtrl', ['$scope', '$http', function ($scope, $http) { 
       $scope.updateEmployee = function () {
         var Employee = {
-            "E_ID": $scope.idEmployee,
-            "CName": $scope.nameEmployee,
-            "LName": $scope.lnameEmployee,
-            "CAddress": $scope.addressEmployee,
-            "Password": $scope.passEmployee
-
+            "W_ID": $scope.E_ID,
+            "W_Name": $scope.E_Name,
+            "W_LName": $scope.E_LName,
+            "W_Address": $scope.E_Address,
+            "W_Password": $scope.E_Pass
         }
         console.log(Employee);
         $http.post(link +'/api/employees/post',Employee).

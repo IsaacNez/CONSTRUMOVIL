@@ -199,7 +199,7 @@
                 </div>    
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="E_Pass">Write a Password</label>
-                    <input type="text" id= "E_Pass" name="E_Pass" ng-model="E_Pass" class="form-control" placeholder="Password">
+                    <input type="password" id= "E_Pass" name="E_Pass" ng-model="E_Pass" class="form-control" placeholder="Password">
                 </div>    
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="E_ID">Write an ID</label>
@@ -211,10 +211,9 @@
                 </div>    
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="E_Charge">Select a Charge</label>
-                    <select id= "E_Charge" name = "E_Charge" ng-model="E_Charge" class="form-control" >
-                        <option>Dependiente</option>
-                        <option>Manager</option>
-                        <option>Administrator</option></select>
+                    <select id= "E_Charge" name = "E_Charge" ng-model="E_Charge" class="form-control"  >
+                        <option ng-repeat="item in Charges">{{item.R_ID}}</option>
+                    </select>
                 </div>
                 
                 <div align="center">
@@ -337,21 +336,16 @@
                 </div>
         
                  <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="PR_Day" >Write a Birthdate Day  </label>
-                    <input id=PR_Day type="number" ng-model="PR_Day" class="form-control" placeholder="Day">
+                    <label for="PR_Date" >Write a Birthdate Date  </label>
+                    <input id=PR_Date type="date" ng-model="PR_Date" class="form-control" placeholder="Date">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Status" >Write Status</label>
+                    <input id=PR_Status type="text" ng-model="PR_Status" class="form-control" placeholder="Provider Status">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
                 </div>
                 
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="PR_Month" >Write a Birthdate Month </label>
-                    <input id=PR_Month type="number" ng-model="PR_Month" class="form-control" placeholder="Month">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="PR_Year" >Write a Birthdate Year </label>
-                    <input id=PR_Year type="number" ng-model="PR_Year" class="form-control" placeholder="Year">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
                      <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="PR_BranchStore">Select a BrachStore</label>
                     <select type="number" id = "PR_BranchStore" class="form-control"  name="PR_BranchStore" ng-model="PR_BranchStore" placeholder="Select a Brach Store" >
@@ -386,6 +380,11 @@
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="CA_Description" >Write a Category Description</label>
                     <input id=CA_Description type="text" ng-model="CA_Description" class="form-control" placeholder="Category Description">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_Status" >Write a Category Description</label>
+                    <input id=CA_Status type="text" ng-model="CA_Status" class="form-control" placeholder="Category Status">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div align="center">
@@ -561,24 +560,24 @@
             </div>
             <div class="modal-body">
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="idEmployee">Employee ID</label>
-                    <input contenteditable='false' id="idEmployee" ng-model="idEmployee" class="form-control">{{item.W_ID}}
+                    <label for="E_ID">Employee ID</label>
+                    <input contenteditable='false' id="E_ID" ng-model="E_ID" class="form-control">{{item.W_ID}}
                 </div>
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="nameEmployee">Employee Name</label>
-                    <input contenteditable='true' id="nameEmployee" ng-model="nameEmployee" class="form-control">{{item.W_Name}}
+                    <label for="E_Name">Employee Name</label>
+                    <input contenteditable='true' id="E_Name" ng-model="E_Name" class="form-control">{{item.W_Name}}
                 </div>
                 <div>
-                    <label for="lnameEmployee">Employee Last Name</label>
-                    <input contenteditable='true' id="lnameEmployee" ng-model="lnameEmployee" class="form-control">{{item.W_LName}}
+                    <label for="E_LName">Employee Last Name</label>
+                    <input contenteditable='true' id="E_LName" ng-model="E_LName" class="form-control">{{item.W_LName}}
                 </div>
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="addressEmployee">Employee Address</label>
-                    <input contenteditable='true' id="addressEmployee" ng-model="addressEmployee" class="form-control">{{item.W_Address}}
+                    <label for="E_Address">Employee Address</label>
+                    <input contenteditable='true' id="E_Address" ng-model="E_Address" class="form-control">{{item.W_Address}}
                 </div>
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="passEmployee">Employee Password</label>
-                    <input contenteditable='true' id="passEmployee" ng-model="passEmployee" class="form-control">{{item.W_Password}}
+                    <label for="E_Pass">Employee Password</label>
+                    <input contenteditable='true' id="E_Pass" ng-model="E_Pass" class="form-control">{{item.W_Password}}
                 </div>
                     
                 <div align="center">
