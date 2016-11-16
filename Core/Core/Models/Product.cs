@@ -10,7 +10,7 @@ namespace WebApplication1.Models
     {
         public int PR_ID { get; set; }
         public int PR_Price { get; set; }
-        public bool PR_Exempt { get; set; }
+        public int PR_Exempt { get; set; }
         public string PR_Description { get; set; }
         public int PR_Quantity { get; set; }
         public string PR_Name { get; set; }

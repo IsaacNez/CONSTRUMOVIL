@@ -102,7 +102,7 @@ namespace WebApplication1.Controllers
                 emp.C_Phone = Convert.ToInt32(reader.GetValue(4).ToString());
                 emp.C_Date = (DateTime)reader.GetValue(5);
                
-                emp.C_Penalization = Convert.ToInt32(reader.GetValue(8).ToString());
+                emp.C_Penalization = Convert.ToInt32(reader.GetValue(6).ToString());
                 
                 values.Add(emp);
             }
@@ -122,7 +122,7 @@ namespace WebApplication1.Controllers
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = "DELETE FROM CLIENT WHERE " + attribute + "=" + id;
+            sqlCmd.CommandText = "DELETE FROM CLIENT WHERE " + actions[0] + "=" + ids[0];
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             int rowDeleted = sqlCmd.ExecuteNonQuery();

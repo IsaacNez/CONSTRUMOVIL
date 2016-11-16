@@ -94,10 +94,11 @@ namespace WebApplication1.Controllers
                 emp = new Product();
                 emp.PR_ID = Convert.ToInt32(reader.GetValue(0).ToString());
                 emp.PR_Name = reader.GetValue(1).ToString();
-                emp.PR_Price = Convert.ToInt32(reader.GetValue(5).ToString());
-                emp.PR_Exempt = Convert.ToBoolean(reader.GetValue(2).ToString());
-                emp.PR_Description = reader.GetValue(3).ToString();
-                emp.PR_Quantity = Convert.ToInt32(reader.GetValue(4).ToString());
+                emp.PR_Price = Convert.ToInt32(reader.GetValue(2).ToString());
+                emp.PR_Exempt = Convert.ToInt32(reader.GetValue(3).ToString());
+                emp.PR_Description = reader.GetValue(4).ToString();
+                System.Diagnostics.Debug.WriteLine(reader.GetValue(4).ToString());
+                emp.PR_Quantity = Convert.ToInt32(reader.GetValue(5).ToString());
                 values.Add(emp);
 
             }
@@ -157,7 +158,7 @@ namespace WebApplication1.Controllers
         [ActionName("Post")]
         public void AddProduct(Product product)
         {
-            System.Diagnostics.Debug.Write(product.PR_ID);
+            System.Diagnostics.Debug.Write(product.PR_Description);
 
 
             SqlConnection myConnection = new SqlConnection();
@@ -165,7 +166,7 @@ namespace WebApplication1.Controllers
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
 
-            sqlCmd.CommandText = "INSERT INTO PRODUCT(PR_ID,PR_Price,PR_Exemt,PR_Description,PR_Quantity,PR_Name,P_ID,S_ID) Values(@PR_ID,@PR_Price,@PR_Exemt,@PR_Description,@PR_Quantity,@PR_Name,@P_ID,@S_ID)";
+            sqlCmd.CommandText = "INSERT INTO PRODUCT(PR_ID,PR_Price,PR_Exempt,PR_Description,PR_Quantity,PR_Name,P_ID,S_ID) Values(@PR_ID,@PR_Price,@PR_Exempt,@PR_Description,@PR_Quantity,@PR_Name,@P_ID,@S_ID)";
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
@@ -174,7 +175,7 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@PR_Description", product.PR_Description);
             sqlCmd.Parameters.AddWithValue("@PR_Quantity", product.PR_Quantity);
             sqlCmd.Parameters.AddWithValue("@PR_Name", product.PR_Name);
-            sqlCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
+            sqlCmd.Parameters.AddWithValue("@P_ID", product.P_ID);
             sqlCmd.Parameters.AddWithValue("@S_ID", product.S_ID);
 
             myConnection.Open();
