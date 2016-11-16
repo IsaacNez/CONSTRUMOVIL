@@ -1,5 +1,5 @@
 //Vra Globals
-var url= 'http://desktop-6upj287:7575';
+var url= 'http://bryan:7580';
 var userI = localStorage.userID;
 var userN = localStorage.userName;
 
@@ -52,9 +52,13 @@ var stageForm = angular.module('clientView',[])
       var date=new Date();
       var factura;
       var productList; 
-     console.log(clientID); $http.get(url+'/api/sucursal/get/S_ID/undefined')
+      $http.get(url+'/api/sucursal/get/S_ID/undefined')
             .then( function (response) {    
               $scope.branchStores = response.data;           
+        });
+    $http.get(url+'/api/Client/get/C_ID/undefined')
+            .then( function (response) {    
+              $scope.Clients = response.data;           
         });
       
       $scope.addToCart = function (value1,value2){
@@ -68,12 +72,12 @@ var stageForm = angular.module('clientView',[])
               products = products+ "," + value1 ;
               amounts = amounts+","  + value2  ;
           }
-          console.log(url+'/api/preorder/'+products+'/'+amounts);
+          console.log(url+'/api/order/'+products+'/'+amounts);
            
       } 
       $scope.addProduct = function () {
-          
-         $http.get(url+'/api/product/get/PName/'+$scope.productName)
+          console.log(url+'/api/product/get/PR_Name/'+$scope.productName);
+         $http.get(url+'/api/product/get/PR_Name/'+$scope.productName)
             .then( function (response) {
             $scope.productList = response.data;
           
@@ -89,13 +93,13 @@ var stageForm = angular.module('clientView',[])
           order={
               "O_ID": randomOrder,
               "S_ID": $scope.branchStore,
-              "C_ID": clientID,
-              "OStatus":$scope.status,
-              "Products": products,
-              "Amount": amounts,
-              "OPriority": 0,
-              "OrderDate": $scope.date,
-              "OPlatform": "store"
+              "C_ID": $scope.clientid,
+              "W_ID": userI,
+              "O_Status":$scope.status,
+              "PR_Name": products,
+              "PR_Amount": amounts,
+              "O_Priority": 0,
+              "O_Date": $scope.date
               
           }
           console.log(order);

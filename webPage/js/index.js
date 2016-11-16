@@ -1,5 +1,6 @@
 
 //ANGULAR MODULE TO MANAGE INDEX.HTML
+var url='http://bryan:7580';
 var indexApp = angular.module('index',[])
 .controller('indexCtrl', ['$scope', '$http', function ($scope, $http) {
     var U_Code;
@@ -28,28 +29,42 @@ var indexApp = angular.module('index',[])
     //FUNCTION TO CHECK IF USER EXIST IN DB
     $scope.checkUser = function()
         {
-             $http.get('http://desktop-6upj287:7575/api/User/get/U_ID,U_Password/'+$scope.U_ID +","+$scope.U_Password)
+     
+        
+            $http.get(url+'/api/Employees/get/W_ID,W_Password/'+$scope.U_ID +","+$scope.U_Password)
                     .then(function (response) 
                 {
-                    mensaje=response.data[0];
+                console.log(response.data[0]);
+                mensaje=response.data[0];
+               
+                console.log(mensaje.W_ID);
+                localStorage.setItem("userName", mensaje.W_Name); 
+                localStorage.setItem("userID", mensaje.W_ID);
+                window.location.assign("/pages/clientView.html");
+                /**
+                    
                  
                     $scope.roles   = mensaje.q_role; 
                     for(var x = 0; x < $scope.roles.length; x++) {$scope.roles[x] = JSON.parse($scope.roles[x]);}
                  
-                    localStorage.setItem("user", mensaje.q_name);
-                    localStorage.setItem("code", mensaje.q_code);
-             
-                    console.log(mensaje.q_code);
+                   
+                    localStorage.setItem("user", mensaje.q_name); 
+                    localStorage.setItem("userName", mensaje.q_id);
+                   
                  
                     if($scope.roles.length > 1)  {loginmodal.style.display = "block";}
-                    else if($scope.roles[0]==1)  {window.location.assign("/pages/admiView.html");}
-                    else if($scope.roles[0]==2)  {window.location.assign("/pages/employeeView.html");}
-                    else if($scope.roles[0]==3)  {window.location.assign("/pages/clientView.html");}
-                    else if($scope.roles[0]==4)  {localStorage.setItem("user", mensaje.q_name); 
-                                                  localStorage.setItem("code", mensaje.q_id);
-                                                  window.location.assign("/pages/generalView.html");}  
-                    
-                });       
+                    else if($scope.roles[0]==1)  {window.location.assign("/pages/dependentView.html");}
+                    else if($scope.roles[0]==2)  {window.location.assign("/pages/employeesView.html");}
+                    else if($scope.roles[0]==3)  {window.location.assign("/pages/generalView.html");}
+                    else if($scope.roles[0]==4)  {
+                    window.location.assign("/pages/managerView.html");}  
+                    else if($scope.roles[0]==5)  {
+                    window.location.assign("/pages/admiView.html");} 
+                
+                    */
+                });  
+        
+            
         }}]);
 
 

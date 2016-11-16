@@ -1,7 +1,8 @@
 //Vra Globals
-var url= 'http://desktop-6upj287:7575';
+var url= 'http://bryan:7580';
 
 var userN = localStorage.userName;
+var userI = localStorage.userID;
 
 /**
  * Modal where the user can sign in
@@ -67,8 +68,7 @@ var stageForm = angular.module('managerView',[])
                 if(Boolean(attributes)){
                     attributes+=",";
                     values+=",";}
-                attributes+="OPlatform";
-                values+=$scope.platform;
+                
             }
         if(attributes==""){
         
