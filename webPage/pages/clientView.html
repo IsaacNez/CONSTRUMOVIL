@@ -70,7 +70,13 @@
                      <select id=branchStore type="number"  name="BranchStore" class="form-control" ng-model="branchStore" placeholder="Select a Brach Store" >
                     <option ng-repeat="item in branchStores">{{item.S_ID}}</option>
                     </select>
-            </div>        
+            </div>  
+             <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                <label for="ClientID">Select a Client</label>
+                 <select id=ClientID type="number"  name="ClientID" class="form-control" ng-model="clientid" placeholder="Select a Client" >
+                <option ng-repeat="item in Clients">{{item.C_ID}}</option>
+                </select>
+            </div>  
  
             <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                 <label for="phone" >Write a Phone Number</label>
@@ -117,16 +123,16 @@
                     <tbody>
                         <tr ng-repeat="item in productList | orderBy:'PName'">
                             <td>{{item.PR_ID}}</td>
-                            <td>{{item.PName}}</td>
-                            <td>{{item.PDescription}}</td>
-                            <td>{{item.Price}}</td>
-                            <td>{{item.Extent}}</td>
+                            <td>{{item.PR_Name}}</td>
+                            <td>{{item.PR_Description}}</td>
+                            <td>{{item.PR_Price}}</td>
+                            <td>{{item.PR_Exempt}}</td>
                             
                             <!--<td>{{item.DepartmentName}}</td>-->
                             <td><input type="number" min="0" ng-model="amount" >
                                         
                             <td><a class="btn btn-danger btn-xs" ng-click="addToCart(item.PR_ID,amount)">
-                                        <span class="glyphicon glyphicon-expand"></span></a></td>
+                                        <span class="glyphicons glyphicons-cart-in"></span></a></td>
                         </tr>
                     </tbody>
                 </table>
