@@ -5,7 +5,7 @@ var allProducts;
 var allAmounts;
 var userID = localStorage.user;
 var userCode = localStorage.code;
-
+var url='http://bryan:7580';
 //ANGULAR MODULE TO MANAGE THE PROJECT POP POP
 var stageForm = angular.module('employeeView',[])
 .controller('projectCtrl', ['$scope', '$http', function ($scope, $http)
@@ -14,10 +14,10 @@ var stageForm = angular.module('employeeView',[])
         // VARIABLES TO GET INFORMATION OF DATA BASE
         var Users;
         var Clients;
-        $http.get('http://desktop-6upj287:7575/api/Engineer/get/getAll/getAll')
+        $http.get(url+'/api/Engineer/get/getAll/getAll')
                 .then( function (response) {    
                   $scope.Users = response.data;});
-        $http.get('http://desktop-6upj287:7575/api/Client/get/getAll/getAll')
+        $http.get(url+'/api/Client/get/getAll/getAll')
                 .then( function (response) {    
                   $scope.Clients = response.data;});
         
@@ -33,7 +33,7 @@ var stageForm = angular.module('employeeView',[])
                                     "U_ID": $scope.C_ID,
                                     "U_code":$scope.U_ID
                                 }
-                $http.post('http://desktop-6upj287:7575/api/project/post',Project).
+                $http.post(url+'/api/project/post',Project).
                     success(function (data, status, headers, config) {alert('the new user has been posted!');}).
                     error(function (data, status, headers, config) {alert('Error while posting the new employee')});
              }
@@ -43,7 +43,7 @@ var stageForm = angular.module('employeeView',[])
 //ANGULAR MODULE TO MANAGE THE PRODUCT PER STAGE POP POP
 stageForm =  angular.module('employeeView')
 .controller('stageProductCtrl', ['$scope', '$http', function ($scope, $http) {
-        var url = 'http://isaac:7549';
+    
         var productList;
         var prices;
 
@@ -51,7 +51,7 @@ stageForm =  angular.module('employeeView')
          * FUNCTION TO GET PRODUCTS FROM DATA BASE
          */
         $scope.getProduct = function (){
-            $http.get('http://desktop-6upj287:7575/api/Product/get/PName/'+$scope.PName)
+            $http.get(url+'/api/Product/get/PName/'+$scope.PName)
                 .then( function (response) { $scope.productList = response.data;}); }
         /**
          * FUNCTION TO INSERT A PRODUCT 
@@ -67,7 +67,7 @@ stageForm =  angular.module('employeeView')
                       "PR_Price": value3,
                       "PR_Quantity": value2
                    }
-          $http.post('http://desktop-6upj287:7575/api/stagexproduct/post',order).
+          $http.post(url+'/api/stagexproduct/post',order).
           success(function (data, status, headers, config) {alert('the new order has been posted!');}).
           error(function (data, status, headers, config)   {alert('Error while posting the new order')});
 
@@ -91,7 +91,7 @@ stageForm =  angular.module('employeeView')
 //ANGULAR MODULE TO MANAGE THE STAGE PER PROJECT POP POP
 stageForm =  angular.module('employeeView')
 .controller('stageProjectCtrl', ['$scope', '$http', function ($scope, $http) {
-        var url = 'http://isaac:7549';
+        
          /**
          * FUNCTION TO INSERT A NEW STAGE IN A PROJEcT
          */ 
@@ -104,7 +104,7 @@ stageForm =  angular.module('employeeView')
                       "PXS_DateEnd":$scope.S_DateEnd,
                       "PXS_Status": $scope.S_Status,
                     }
-              $http.post('http://desktop-6upj287:7575/api/projectxstage/post',order).
+              $http.post(url+'/api/projectxstage/post',order).
               success(function (data, status, headers, config) {alert('the new order has been posted!');}).
               error(function (data, status, headers, config)   {alert('Error while posting the new order')});
             }
@@ -161,7 +161,7 @@ stageForm =  angular.module('employeeView')
                             "S_Name": $scope.S_Name,
                             "S_Description": $scope.S_Description
                           }        
-            $http.post('http://desktop-6upj287:7575/api/Stage/post/',Stage).
+            $http.post(url+'/api/Stage/post/',Stage).
             success(function (data, status, headers, config) {alert('the new Stage has been posted!');}).
             error(function (data, status, headers, config)   {alert('Error while posting the new Stage')});      
         }
@@ -178,7 +178,7 @@ stageForm = angular.module('employeeView')
     /**
     * FUNTION TO GET THE LIST OF ROLES
     */ 
-    $http.get('http://desktop-6upj287:7575/api/Role/get/R_Name/undefined')
+    $http.get(url+'/api/Role/get/R_Name/undefined')
         .then( function (response) {$scope.rolelist = response.data;});
     
   
@@ -196,7 +196,7 @@ stageForm = angular.module('employeeView')
                         "R_ID": parseInt($scope.R_ID.substring(0,1)),
                         "U_Password":$scope.U_Password
                     }
-        $http.post('http://desktop-6upj287:7575/api/User/post/',User).
+        $http.post(url+'/api/User/post/',User).
         success(function (data, status, headers, config) {alert('User has been posted');}).
         error(function (data, status, headers, config)   {alert('error posting User')});
     }
@@ -221,7 +221,7 @@ stageForm =  angular.module('employeeView')
         /**
         * GET PROJECTS FROM DB
         */ 
-        $http.get('http://desktop-6upj287:7575/api/Project/get/u_code/'+userCode)
+        $http.get(url+'/api/Project/get/u_code/'+userCode)
                 .then( function (response) {$scope.projectList = response.data;});
         /**
         * FUNCTION TO SET ACTUAL PROJECT AND STAGE WHEN WE WANT TO EDIT
@@ -240,14 +240,14 @@ stageForm =  angular.module('employeeView')
         * FUNCTION TO GET STAGES NAMES 
         */ 
         $scope.getStages = function (){
-            $http.get('http://desktop-6upj287:7575/api/Stage/get/s_name/'+$scope.S_Name)
+            $http.get(url+'/api/Stage/get/s_name/'+$scope.S_Name)
                 .then( function (response) {$scope.stageList = response.data;});}
 
         /**
         * GET PROJECTS FROM DB
         */ 
        $scope.updateProject= function(){
-           $http.get('http://desktop-6upj287:7575/api/ProjectDetails/get/p_id/'+$scope.P_ID)
+           $http.get(url+'/api/ProjectDetails/get/p_id/'+$scope.P_ID)
                 .then( function (response) {$scope.bigJSON = response.data;});
                 console.log(bigJSON);
        }
@@ -258,7 +258,7 @@ stageForm =  angular.module('employeeView')
         */ 
         $scope.getProjectDetails = function(){
             
-             $http.get('http://desktop-6upj287:7575/api/ProjectDetails/get/p_id/'+$scope.P_ID)
+             $http.get(url+'/api/ProjectDetails/get/p_id/'+$scope.P_ID)
                     .then(function (response)
                             {  
                                // CATCH JSON RESPONSE
@@ -297,7 +297,7 @@ stageForm =  angular.module('employeeView')
                     }
               console.log(order);
               $scope.getProjectDetails();
-              $http.post('http://desktop-6upj287:7575/api/Order/post',order).
+              $http.post(url+'/api/Order/post',order).
               success(function (data, status, headers, config) {alert('the new order has been posted!');}).
               error(function (data, status, headers, config)   {alert('Error while posting the new order')});
             }

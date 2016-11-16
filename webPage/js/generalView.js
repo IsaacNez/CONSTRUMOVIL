@@ -5,7 +5,7 @@ var Uid;
 var Sname;
 var Status;
 var userid;
-var url= 'http://desktop-6upj287:7575';
+var url= 'http://bryan:7580';
 var userID = localStorage.user;
 var userCode = localStorage.code;
 
