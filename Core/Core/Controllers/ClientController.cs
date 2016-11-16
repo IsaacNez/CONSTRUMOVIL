@@ -15,42 +15,41 @@ namespace WebApplication1.Controllers
 {
     public class ClientController : ApiController
     {
-        public static IList<Client> prolist = new List<Client>();
-        [AcceptVerbs("GET")]
-        public Client RPCStyleMethodFetchFirstEmployees()
-        {
-            return prolist.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
-                + "Integrated Security=true;";
-        }
 
         [HttpGet]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Client client)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE CLIENT ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+            string action = "UPDATE CLIENT SET C_Name = " + client.C_Name + ",C_LName = " + client.C_LName+",C_Address = "+client.C_Address+",C_Phone = "+client.C_Phone+",C_Date = "+client.C_Date+",C_Penalization = "+client.C_Penalization+"C_Status = "+client.C_Status + "WHERE C_ID =" + client.C_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(client);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "ClIENT";
+                if (client.ID_Seller != 0)
+                {
+                    tmp.seller.Add(client.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
         }
 

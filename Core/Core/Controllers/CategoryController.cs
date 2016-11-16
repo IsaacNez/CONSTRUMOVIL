@@ -15,72 +15,43 @@ namespace WebApplication1.Controllers
 {
     public class CategoryController : ApiController
     {
-        public string UpdateConnectionString(string baseString, string[] uattr, string[] uvalue, string[] cattr, string[] cvalue)
-        {
-            string formingString = baseString;
-            formingString = formingString + "SET ";
-            for(int i = 0; i < uattr.Length; i++)
-            {
-                if(i == (uattr.Length - 1))
-                {
-                    formingString = formingString + uattr[i] + "='" + uvalue[i]+"' ";
-                }
-                else
-                {
-                    formingString = formingString + uattr[i] + "='" + uvalue[i] + "', ";
-                }
-            }
-            formingString = formingString + "WHERE ";
-            for(int i = 0; i < cattr.Length; i++)
-            {
-                if(i == (cattr.Length - 1))
-                {
-                    formingString = formingString + cattr[i] + "='" + cvalue[i] + "';";
-                }
-                else
-                {
-                    formingString = formingString + cattr[i] + "='" + cvalue[i] + "' AND ";
-                }
-            }
-            return formingString;
-        }
 
         [HttpGet]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Category category)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE CATEGORY ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+     
+            string action = "UPDATE CATEGORY SET CA_Status = "+category.CA_Status+",CA_Description = "+category.CA_Description +"WHERE CA_ID =" + category.CA_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(category);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "CATEGORY";
+                if (category.ID_Seller != 0)
+                {
+                    tmp.seller.Add(category.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
-        }
-        public static IList<Category> prolist = new List<Category>();
-        [AcceptVerbs("GET")]
-        public Category RPCStyleMethodFetchFirstEmployees()
-        {
-            return prolist.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
-                + "Integrated Security=true;";
         }
 
         [HttpGet]
@@ -180,7 +151,7 @@ namespace WebApplication1.Controllers
         [ActionName("Post")]
         public void AddCategory(Category category)
         {
-            Sync tmp = new Sync();
+ 
 
             System.Diagnostics.Debug.WriteLine(category.CA_ID);
             System.Diagnostics.Debug.WriteLine("entrando al post");
@@ -202,19 +173,23 @@ namespace WebApplication1.Controllers
             myConnection.Open();
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             string jsonString = javaScriptSerializer.Serialize(category);
-            sqlCmd.ExecuteNonQuery();
-            System.Diagnostics.Debug.Write("insertó");
-            tmp.action = "insert";
-            tmp.model = jsonString;
-            tmp.table = "CATEGORY";
-            if (category.ID_Seller != 0)
+            try
             {
-                tmp.seller.Add(category.ID_Seller);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "INSERT";
+                tmp.model = jsonString;
+                tmp.table = "CATEGORY"
+                if (category.ID_Seller != 0)
+                {
+                    tmp.seller.Add(category.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
             }
-            Models.Tasks.tasks.Add(tmp);
-            string jsonString1 = javaScriptSerializer.Serialize(tmp);
-            System.Diagnostics.Debug.WriteLine(Models.Tasks.tasks.Count);
-            System.Diagnostics.Debug.WriteLine(jsonString1.Replace(@"\", ""));
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
     }

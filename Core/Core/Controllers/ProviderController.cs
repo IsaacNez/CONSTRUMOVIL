@@ -30,28 +30,38 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Provider provider)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE EPROVIDER ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+            string action = "UPDATE PROVIDER SET P_Name = " + provider.P_Name + ",P_LName = " + provider.P_LName+",P_Address = " + provider.P_Address+",P_Date = "+provider.P_Date+ ",P_Status = "+provider.P_Status + "WHERE P_ID =" + provider.P_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(provider);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "PROVIDER";
+                if (provider.ID_Seller != 0)
+                {
+                    tmp.seller.Add(provider.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
         }
 
@@ -63,7 +73,6 @@ namespace WebApplication1.Controllers
             Provider emp = null;
             string[] attr = attribute.Split(',');
             string[] ids = id.Split(',');
-
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlDataReader reader = null;
             SqlConnection myConnection = new SqlConnection();
@@ -72,7 +81,6 @@ namespace WebApplication1.Controllers
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
             string action = "";
-
             if (id != "undefined")
             {
                 SucursalController constructor = new SucursalController();
@@ -82,18 +90,14 @@ namespace WebApplication1.Controllers
             {
                 action = "SELECT * FROM EPROVIDER;";
             }
-
             System.Diagnostics.Debug.WriteLine(action);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             System.Diagnostics.Debug.WriteLine("cargo comando");
-
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             System.Diagnostics.Debug.WriteLine("estado " + myConnection.State);
-
             reader = sqlCmd.ExecuteReader();
-
             while (reader.Read())
             {
                 emp = new Provider();
@@ -103,10 +107,7 @@ namespace WebApplication1.Controllers
                 emp.P_Address = reader.GetValue(3).ToString();
                 emp.P_Date = (DateTime)reader.GetValue(4);
                 values.Add(emp);
-
-
-            }
-            
+            }           
             myConnection.Close();
             return Json(values);
         }

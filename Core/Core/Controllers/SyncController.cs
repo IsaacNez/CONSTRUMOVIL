@@ -19,8 +19,7 @@ namespace WebApplication1.Controllers
         {
             System.Diagnostics.Debug.Write("entró al sync");
 
-            var javaScriptSerializer = new
-                                            System.Web.Script.Serialization.JavaScriptSerializer();
+            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             
             
             System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);

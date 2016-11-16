@@ -17,43 +17,39 @@ namespace WebApplication1.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class EmployeesController : ApiController
     {
-        public static IList<Employee> listEmp = new List<Employee>();
-        [AcceptVerbs("GET")]
-        public Employee RPCStyleMethodFetchFirstEmployees()
-        {
-            return listEmp.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATECA;"
-                + "Integrated Security=true;";
-        }
-
-
         [HttpGet]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Employee employee)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE WORKER ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action+" "+attr+" "+avalue);
-
+            string action = "UPDATE WORKER SET W_Name = " + employee.W_Name + ",W_LName = " + employee.W_LName +",W_Address = "+employee.W_Address+",W_Password = "+employee.W_Password +"WHERE W_ID =" + employee.W_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-            
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(employee);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "WORKER";
+                if (employee.ID_Seller != 0)
+                {
+                    tmp.seller.Add(employee.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
 
@@ -175,7 +171,8 @@ namespace WebApplication1.Controllers
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(employee);
                 sqlCmd.ExecuteNonQuery();
-                
+                var test = new WXRController();
+                test.AddWorkerxRole(employee);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;

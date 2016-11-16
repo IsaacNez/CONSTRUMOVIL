@@ -8,6 +8,8 @@ namespace WebApplication1.Models
 {
     public class Product
     {
+        public int CXP_ID { get; set; }
+        public string CXP_Status { get; set; }
         public int PR_ID { get; set; }
         public int PR_Price { get; set; }
         public int PR_Exempt { get; set; }

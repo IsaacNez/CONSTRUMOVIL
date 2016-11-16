@@ -25,28 +25,38 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Product product)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE PRODUCT ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+            string action = "UPDATE PRODUCT SET PR_Name = " + product.PR_Name+ ",PR_Price = " + product.PR_Price +",PR_Exempt = "+product.PR_Exempt+",PR_Description = "+product.PR_Description+"PR_Quantity = "+product.PR_Quantity+"PR_Status = "+product.PR_Status+ "WHERE PR_ID =" + product.PR_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(product);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "PRODUCT";
+                if (product.ID_Seller != 0)
+                {
+                    tmp.seller.Add(product.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
         }
 
@@ -170,13 +180,14 @@ namespace WebApplication1.Controllers
             {
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
-                //categoryxproduct(product);
+                var test = new CatexproductController();
+                test.AddCategoryxproduct(product);
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(product);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "PROVIDER";
+                tmp.table = "PRODUCT";
                 if (product.ID_Seller != 0)
                 {
                     tmp.seller.Add(product.ID_Seller);
@@ -194,21 +205,5 @@ namespace WebApplication1.Controllers
             
 
         }
-        /*
-        public void categoryxproduct(Product product)
-        {
-            SqlConnection CategoryConnection = new SqlConnection();
-            CategoryConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand CateCmd = new SqlCommand();
-            CateCmd.CommandType = CommandType.Text;
-            CateCmd.CommandText = "INSERT INTO PC(CA_ID,PR_ID) Values(@CA_ID,@PR_ID)";
-            CateCmd.Connection = CategoryConnection;
-            CateCmd.Parameters.AddWithValue("@CA_ID", product.CA_ID);
-            CateCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
-            CategoryConnection.Open();
-            CateCmd.ExecuteNonQuery();
-            CategoryConnection.Close();
-        }
-        */
     }
 }

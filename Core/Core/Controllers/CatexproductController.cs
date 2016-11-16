@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
     {
         [HttpPost]
         [ActionName("Post")]
-        public void AddCategoryxproduct(Category category)
+        public void AddCategoryxproduct(Product category)
         {
             Sync tmp = new Sync();
             System.Diagnostics.Debug.WriteLine(category.CA_ID);

@@ -16,42 +16,40 @@ namespace WebApplication1.Controllers
 {
     public class OrderController : ApiController
     {
-        public static IList<Order> prolist = new List<Order>();
-        [AcceptVerbs("GET")]
-        public Order RPCStyleMethodFetchFirstEmployees()
-        {
-            return prolist.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=DESKTOP-E6QPTVT;Initial Catalog=EPATEC;"
-                + "Integrated Security=true;";
-        }
-
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Order order)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE EORDER ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+            string action = "UPDATE EORDER SET O_Priority = " + order.O_Status + ",O_Status = " + order.O_Status+",O_Date = "+order.O_Date+",O_PPhone = "+order.O_PPhone+ "WHERE O_ID =" + order.O_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonString = javaScriptSerializer.Serialize(order);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "EORDER";
+                if (order.ID_Seller != 0)
+                {
+                    tmp.seller.Add(order.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
         }
 
@@ -63,7 +61,6 @@ namespace WebApplication1.Controllers
             string[] ids = id.Split(',');
             List<Order> values = new List<Order>();
             Order emp = null;
-
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlDataReader reader = null;
             SqlConnection myConnection = new SqlConnection();
@@ -81,18 +78,14 @@ namespace WebApplication1.Controllers
             {
                 action = "SELECT * FROM EORDER;";
             }
-
             System.Diagnostics.Debug.WriteLine(action);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             System.Diagnostics.Debug.WriteLine("cargo comando");
-
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             System.Diagnostics.Debug.WriteLine("estado " + myConnection.State);
-
             reader = sqlCmd.ExecuteReader();
-
             while (reader.Read())
             {
                 emp = new Order();
@@ -103,8 +96,7 @@ namespace WebApplication1.Controllers
                 emp.S_ID = Convert.ToInt32(reader.GetValue(3).ToString());
                 emp.C_ID = Convert.ToInt32(reader.GetValue(5).ToString());
                 values.Add(emp);
-            }
-            
+            }       
             myConnection.Close();
             return Json(values);
         }
@@ -143,36 +135,9 @@ namespace WebApplication1.Controllers
             }
             myConnection.Close();
         }
-        public void orderxproduct(Order order)
-        {
-            string[] products = order.PR_Name.Split(',');
-            string[] values = order.PR_Amount.Split(',');
-            string action = "INSERT INTO ORDERXPRODUCT(OXP_ID,O_ID,PR_Name,PR_Amount PR_Price) Values(@OXP_ID,@O_ID,@PR_Name,@PR_Amount,@PR_Price)";
-            SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand sqlCmd = new SqlCommand();
-            myConnection.Open();
-            
-            sqlCmd.CommandType = CommandType.Text;
-            for (int i = 0; i < products.Length; i++)
-            {
-                Random rnd = new Random();
-                SqlCommand sqlCmd2 = new SqlCommand();
-                sqlCmd2.Connection = myConnection;
-                sqlCmd2.CommandText = action;
-                sqlCmd2.Parameters.AddWithValue("@OXP_ID", rnd);
-                sqlCmd2.Parameters.AddWithValue("@O_ID", order.O_ID);
-                sqlCmd2.Parameters.AddWithValue("@PR_Name", products[i]);
-                sqlCmd2.Parameters.AddWithValue("@PR_Amount", Convert.ToInt32(values[i]));
-                sqlCmd2.Parameters.AddWithValue("@PR_Price", 0);
-                sqlCmd2.ExecuteNonQuery();
-            }
-        }
-
         [ActionName("post")]
         public void AddOrder(Order order)
-        {
-            
+        {           
             System.Diagnostics.Debug.WriteLine(order.C_ID);
             string[] products = order.PR_Name.Split(',');
             string[] values = order.PR_Amount.Split(',');
@@ -193,14 +158,14 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@W_ID", order.W_ID);
             sqlCmd.Parameters.AddWithValue("@S_ID", order.S_ID);
             sqlCmd.Parameters.AddWithValue("@C_ID", order.C_ID);
-            
-
             try
             {
                 Sync tmp = new Sync();
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(order);
                 sqlCmd.ExecuteNonQuery();
+                var test = new OrderxproductController();
+                test.AddOrderxproduct(order);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
