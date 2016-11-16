@@ -114,72 +114,35 @@ namespace WebApplication1.Controllers
         [ActionName("Delete")]
         public void Delete(string attribute, string id)
         {
-            List<int> PR_ID = new List<int>();
-            SqlDataReader reader;
-            SqlConnection SelectProducts = new SqlConnection();
-            SelectProducts.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand sqlCmd = new SqlCommand();
-            sqlCmd.CommandType = CommandType.Text;
-            SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = "SELECT PR_ID FROM PRODUCT WHERE " + attribute + "='" + id + "';";
-            sqlCmd.Connection = SelectProducts;
-            SelectProducts.Open();
-            reader = sqlCmd.ExecuteReader();
-            while (reader.Read())
-            {
-                PR_ID.Add(Convert.ToInt32(reader.GetValue(0)));
-            }
-            SelectProducts.Close();
-            if(PR_ID.Count != 0)
-            {
-                DeletePC(PR_ID, "PC", "PR_ID");
-                DeletePC(PR_ID, "PRODUCT", "PR_ID");
-            }
-            
-            List<int> PDR_ID = new List<int>();
-            PDR_ID.Add(Convert.ToInt32(id));
-            DeletePC(PDR_ID, "NEED","PDR_ID");
-
-            SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand PDRCmd = new SqlCommand();
-            PDRCmd.CommandType = CommandType.Text;
-            PDRCmd.CommandText = "DELETE FROM EPROVIDER WHERE " + attribute + "='" + id + "';";
-            PDRCmd.Connection = myConnection;
-            myConnection.Open();
-            int rowDeleted = PDRCmd.ExecuteNonQuery();
-            myConnection.Close();
-        }
-
-
-        private void DeletePC(List<int> products, string table,string attribute)
-        {
-            string action = "DELETE FROM "+table+" WHERE ";
-
-                for (int i = 0; i < products.Count; i++)
-                {
-                    if (i == (products.Count - 1))
-                    {
-                        action += attribute + "=" + products[i] + ";";
-                    }
-                    else
-                    {
-                        action += attribute + "=" + products[i] + " AND ";
-                    }
-                }
-
-            
-            System.Diagnostics.Debug.WriteLine(action);
+            string[] attr = attribute.Split(',');
+            string[] ids = id.Split(',');
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.CommandText = action;
+            sqlCmd.CommandText = "DELETE FROM EPROVIDER WHERE " + attr[0] + "='" + ids[0] + "';";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "PROVIDER";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
+
 
 
         [HttpPost]
@@ -196,7 +159,7 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO EPROVIDER(P_ID,P_Name,P_LName,P_Address,P_Date) Values(@P_ID,@P_Name,@P_LName,@P_Address,@P_Date)";
+            sqlCmd.CommandText = "INSERT INTO EPROVIDER(P_ID,P_Name,P_LName,P_Address,P_Date,P_Status) Values(@P_ID,@P_Name,@P_LName,@P_Address,@P_Date,@P_Status)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
@@ -205,6 +168,7 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@P_LName", provider.P_LName);
             sqlCmd.Parameters.AddWithValue("@P_Address", provider.P_Address);            
             sqlCmd.Parameters.AddWithValue("@P_Date", provider.P_Date);
+            sqlCmd.Parameters.AddWithValue("@P_Status", provider.P_Status);
             myConnection.Open();
             try
             {

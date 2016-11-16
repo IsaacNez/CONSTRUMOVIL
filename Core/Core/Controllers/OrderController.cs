@@ -114,48 +114,33 @@ namespace WebApplication1.Controllers
         {
             string[] actions = attribute.Split(',');
             string[] ids = id.Split(',');
-            SqlConnection EraseHas = new SqlConnection();
-            EraseHas.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            for (int i = 0; i < actions.Length; i++)
-            {
-                if (actions[i].Equals("O_ID"))
-                {
-                    SqlCommand EraseCmd = new SqlCommand();
-                    EraseCmd.CommandType = CommandType.Text;
-
-                    EraseCmd.CommandText = "DELETE FROM HAS WHERE O_ID=" + ids[i];
-                    EraseCmd.Connection = EraseHas;
-                    EraseHas.Open();
-                    EraseCmd.ExecuteNonQuery();
-                    EraseHas.Close();
-                }
-            }
-            
-
-
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             SucursalController deleteString = new SucursalController();
-            string action = "DELETE FROM EORDER WHERE ";
-            for (int i = 0; i < actions.Length; i++)
-            {
-                if(i == (actions.Length - 1))
-                {
-                    action = action +  actions[i] + "='" + ids[i] + "';";
-                }
-                else
-                {
-                    action = action + actions[i] + "='" + ids[i] + "' AND ";
-                }
-            }
+            string action = "DELETE FROM EORDER WHERE " + actions[0] + "='" + ids[0] + "';";
+
             sqlCmd.CommandText = action;
-            System.Diagnostics.Debug.WriteLine(action);
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "EORDER";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         public void orderxproduct(Order order)

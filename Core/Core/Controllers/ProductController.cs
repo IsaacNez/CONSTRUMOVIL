@@ -112,37 +112,7 @@ namespace WebApplication1.Controllers
         {
             string[] actions = attribute.Split(',');
             string[] ids = id.Split(',');
-            string deletepc = "DELETE FROM PC WHERE ";
-            SqlConnection DeleteProduct = new SqlConnection();
-            DeleteProduct.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            for(int i = 0; i < actions.Length; i++)
-            {
-                if (actions[i].Equals("PR_ID"))
-                {
-                    deletepc = deletepc + actions[i] + "='" + ids[i] + "';";
-                }
-            }
-            System.Diagnostics.Debug.WriteLine(deletepc);
-            SqlCommand PCmd = new SqlCommand();
-            PCmd.CommandType = CommandType.Text;
-            PCmd.CommandText = deletepc;
-            PCmd.Connection = DeleteProduct;
-            DeleteProduct.Open();
-            PCmd.ExecuteNonQuery();
-            DeleteProduct.Close();
-
-            string deleteproduct = "DELETE FROM PRODUCT WHERE ";
-            for (int i = 0; i < actions.Length; i++)
-            {
-                if(i == (actions.Length - 1))
-                {
-                    deleteproduct += actions[i] + "='" + ids[i] + "';";
-                }
-                else
-                {
-                    deleteproduct += actions[i] + "='" + ids[i] + "' AND ";
-                }
-            }
+            string deleteproduct = "DELETE FROM PRODUCT WHERE " + actions[0] + "='" + ids[0] + "';";
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
@@ -150,7 +120,23 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandText = deleteproduct;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "PRODUCT";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         
@@ -166,7 +152,7 @@ namespace WebApplication1.Controllers
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
 
-            sqlCmd.CommandText = "INSERT INTO PRODUCT(PR_ID,PR_Price,PR_Exempt,PR_Description,PR_Quantity,PR_Name,P_ID,S_ID) Values(@PR_ID,@PR_Price,@PR_Exempt,@PR_Description,@PR_Quantity,@PR_Name,@P_ID,@S_ID)";
+            sqlCmd.CommandText = "INSERT INTO PRODUCT(PR_ID,PR_Price,PR_Exempt,PR_Description,PR_Quantity,PR_Name,PR_Status,P_ID,S_ID) Values(@PR_ID,@PR_Price,@PR_Exempt,@PR_Description,@PR_Quantity,@PR_Name,@PR_Status,@P_ID,@S_ID)";
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@PR_ID", product.PR_ID);
@@ -177,6 +163,7 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@PR_Name", product.PR_Name);
             sqlCmd.Parameters.AddWithValue("@P_ID", product.P_ID);
             sqlCmd.Parameters.AddWithValue("@S_ID", product.S_ID);
+            sqlCmd.Parameters.AddWithValue("@PR_Status", product.PR_Status);
 
             myConnection.Open();
             try

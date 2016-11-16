@@ -125,7 +125,23 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandText = "DELETE FROM CLIENT WHERE " + actions[0] + "=" + ids[0];
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "CLIENT";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         [HttpPost]
@@ -142,7 +158,7 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO CLIENT(C_ID,C_Name,C_LName,C_Address,C_Phone,C_Date,C_Penalization) Values(@C_ID,@C_Name,@C_LName,@C_Address,@C_Phone,@C_Date,@C_Penalization)";
+            sqlCmd.CommandText = "INSERT INTO CLIENT(C_ID,C_Name,C_LName,C_Address,C_Phone,C_Date,C_Penalization,C_Status) Values(@C_ID,@C_Name,@C_LName,@C_Address,@C_Phone,@C_Date,@C_Penalization,@C_Status)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
@@ -153,7 +169,8 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@C_Phone", client.C_Phone);
             sqlCmd.Parameters.AddWithValue("@C_Date", client.C_Date);
             sqlCmd.Parameters.AddWithValue("@C_Penalization", client.C_Penalization);
-            
+            sqlCmd.Parameters.AddWithValue("@C_Status", client.C_Status);
+
             myConnection.Open();
             Sync tmp = new Sync();
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();

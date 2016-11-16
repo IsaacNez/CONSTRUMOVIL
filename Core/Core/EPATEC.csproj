@@ -125,20 +125,24 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
-    <Compile Include="Controllers\CheckController.cs" />
+    <Compile Include="Controllers\CatexproductController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\OrderxproductController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProviderController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\StatisticController.cs" />
     <Compile Include="Controllers\SucursalController.cs" />
     <Compile Include="Controllers\SyncController.cs" />
+    <Compile Include="Controllers\WXRController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Worker.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Orderxproduct.cs" />

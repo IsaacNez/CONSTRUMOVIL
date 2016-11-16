@@ -33,7 +33,12 @@ namespace WebApplication1.Controllers
                 System.Diagnostics.Debug.WriteLine("entró al for inicial");
                 if (Models.Tasks.tasks[i].seller.Count==0)
                 {
-                    values = Models.Tasks.tasks;
+                    for (int j = 0; j < Models.Tasks.tasks.Count; j++)
+                    {
+                        values.Add(Tasks.tasks[j]);
+
+                    }
+                        
                     string jsonString1 = javaScriptSerializer.Serialize(values);
 
                     System.Diagnostics.Debug.WriteLine(jsonString1);
@@ -49,6 +54,7 @@ namespace WebApplication1.Controllers
 
                         if (Models.Tasks.tasks[i].seller[z] != Convert.ToInt32(ids[0]))
                         {
+                            Models.Tasks.tasks[i].seller.Add(Convert.ToInt32(ids[0]));
                             values.Add(Models.Tasks.tasks[i]);
                             string jsonString1 = javaScriptSerializer.Serialize(Models.Tasks.tasks[i]);
 

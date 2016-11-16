@@ -138,27 +138,8 @@ namespace WebApplication1.Controllers
         [ActionName("Delete")]
         public void Delete(string attribute, string id)
         {
-
-            SqlConnection DeleteSP = new SqlConnection();
-            DeleteSP.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand SPCmd = new SqlCommand();
-            SPCmd.CommandType = CommandType.Text;
-            SPCmd.CommandText = "DELETE FROM NEED WHERE S_ID=" + id + ";";
-            SPCmd.Connection = DeleteSP;
-            DeleteSP.Open();
-            SPCmd.ExecuteNonQuery();
-            DeleteSP.Close();
-
-            SqlConnection DeleteSE = new SqlConnection();
-            DeleteSE.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlCommand SECmd = new SqlCommand();
-            SECmd.CommandType = CommandType.Text;
-            SECmd.CommandText = "DELETE FROM EMPLOYEE WHERE S_ID=" + id + ";";
-            SECmd.Connection = DeleteSE;
-            DeleteSE.Open();
-            SECmd.ExecuteNonQuery();
-            DeleteSE.Close();
-
+            string[] attr = attribute.Split(',');
+            string[] ids = id.Split(',');
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
@@ -166,7 +147,24 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandText = "DELETE FROM SUCURSAL WHERE S_ID=" + id + ";";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "SUCURSAL";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+
+            }
             myConnection.Close();
         }
         [HttpPost]

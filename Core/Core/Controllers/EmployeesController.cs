@@ -123,10 +123,26 @@ namespace WebApplication1.Controllers
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = "DELETE FROM WORKER WHERE " + attribute + "='" + id + "';";
+            sqlCmd.CommandText = "DELETE FROM WORKER WHERE " + actions[0] + "='" + ids[0] + "';";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "WORKER";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         [HttpPost]
@@ -159,6 +175,7 @@ namespace WebApplication1.Controllers
                 var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string jsonString = javaScriptSerializer.Serialize(employee);
                 sqlCmd.ExecuteNonQuery();
+                
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;

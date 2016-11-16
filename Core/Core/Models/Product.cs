@@ -18,6 +18,7 @@ namespace WebApplication1.Models
         public int P_ID { get; set; }
         public int S_ID { get; set; }
         public int ID_Seller { get; set; }
+        public string PR_Status { get; set; }
 
     }
 }

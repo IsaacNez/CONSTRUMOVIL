@@ -16,6 +16,7 @@ namespace WebApplication1.Models
         public DateTime C_Date { get; set; }
         public int C_Penalization { get; set; }
         public int ID_Seller { get; set; }
+        public string C_Status { get; set; }
 
     }
 }

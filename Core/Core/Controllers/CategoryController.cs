@@ -135,7 +135,8 @@ namespace WebApplication1.Controllers
         [ActionName("Delete")]
         public void Delete(string attribute, string id)
         {
-
+            string[] actions = attribute.Split(',');
+            string[] ids = id.Split(',');
             SqlConnection DeletePC = new SqlConnection();
             DeletePC.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -153,10 +154,26 @@ namespace WebApplication1.Controllers
 
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.CommandText = "DELETE FROM CATEGORY WHERE " + attribute + "='" + id + "';";
+            sqlCmd.CommandText = "DELETE FROM CATEGORY WHERE " + actions[0] + "='" + ids[0] + "';";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {   
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "CATEGORY";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         [HttpPost]
@@ -174,12 +191,13 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO CATEGORY(CA_ID,CA_Description) Values(@CA_ID,@CA_Description)";
+            sqlCmd.CommandText = "INSERT INTO CATEGORY(CA_ID,CA_Description,CA_Status) Values(@CA_ID,@CA_Description,@CA_Status)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@CA_ID", category.CA_ID);
             sqlCmd.Parameters.AddWithValue("@CA_Description", category.CA_Description);
+            sqlCmd.Parameters.AddWithValue("@CA_Status", category.CA_Status);
 
             myConnection.Open();
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -194,7 +212,9 @@ namespace WebApplication1.Controllers
                 tmp.seller.Add(category.ID_Seller);
             }
             Models.Tasks.tasks.Add(tmp);
-            System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+            string jsonString1 = javaScriptSerializer.Serialize(tmp);
+            System.Diagnostics.Debug.WriteLine(Models.Tasks.tasks.Count);
+            System.Diagnostics.Debug.WriteLine(jsonString1.Replace(@"\", ""));
             myConnection.Close();
         }
     }

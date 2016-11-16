@@ -13,6 +13,7 @@ namespace WebApplication1.Models
         public string P_Address { get; set; }
         public DateTime P_Date { get; set; }
         public int ID_Seller { get; set; }
+        public string P_Status { get; set; }
 
     }
 }

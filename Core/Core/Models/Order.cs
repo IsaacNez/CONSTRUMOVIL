@@ -8,6 +8,7 @@ namespace WebApplication1.Models
 {
     public class Order
     {
+        public int OXP_ID { get; set; }
         public string PR_Name { get; set; }
         public string PR_Amount { get; set; }
         public int PR_Price{get;set;}
