@@ -17,24 +17,25 @@ namespace WebApplication1.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class EmployeesController : ApiController
     {
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
         public void UpdateRecords(Employee employee)
         {
-            string action = "UPDATE WORKER SET W_Name = " + employee.W_Name + ",W_LName = " + employee.W_LName +",W_Address = "+employee.W_Address+",W_Password = "+employee.W_Password +"WHERE W_ID =" + employee.W_ID;
+            string action = "UPDATE WORKER SET W_Name = '" + employee.W_Name + "',W_LName = '" + employee.W_LName +"',W_Address = '"+employee.W_Address+"',W_Password = '"+employee.W_Password +"' WHERE W_ID =" + employee.W_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
             sqlCmd.CommandType = CommandType.Text;
+            employee.R_ID = 1;
+            
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(employee);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(employee);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -151,7 +152,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("entrando al post ");
 
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString; 
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(employee.W_Password);
@@ -165,11 +166,11 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@W_LName", employee.W_LName);
             sqlCmd.Parameters.AddWithValue("@W_Address", employee.W_Address);
             sqlCmd.Parameters.AddWithValue("@W_Password", employee.W_Password);
+            sqlCmd.Parameters.AddWithValue("@W_Status", employee.W_Status);
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(employee);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(employee);
                 sqlCmd.ExecuteNonQuery();
                 var test = new WXRController();
                 test.AddWorkerxRole(employee);
@@ -177,6 +178,7 @@ namespace WebApplication1.Controllers
                 tmp.action = "insert";
                 tmp.model = jsonString;
                 tmp.table = "WORKER";
+                if (employee.ID_Seller != 0)
                 {
                     tmp.seller.Add(employee.ID_Seller);
                 }

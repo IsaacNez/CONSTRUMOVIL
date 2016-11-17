@@ -15,6 +15,53 @@ namespace WebApplication1.Controllers
 {
     public class RoleController : ApiController
     {
+        [HttpGet]
+        [ActionName("Get")]
+        public JsonResult<List<Role>> Get(string attribute, string id)
+        {
+            string[] attr = attribute.Split(',');
+            string[] ids = id.Split(',');
+            List<Role> values = new List<Role>();
+            Role emp = null;
+
+            System.Diagnostics.Debug.WriteLine("entrando al get");
+            SqlDataReader reader = null;
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            System.Diagnostics.Debug.WriteLine("cargo base");
+            SqlCommand sqlCmd = new SqlCommand();
+            System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
+            string action = "";
+
+            if (id != "undefined")
+            {
+                SucursalController constructor = new SucursalController();
+                action = constructor.FormConnectionString("EROLE", attr, ids);
+            }
+            else
+            {
+                action = "SELECT * FROM EROLE;";
+            }
+
+            System.Diagnostics.Debug.WriteLine(action);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.CommandText = action;
+            System.Diagnostics.Debug.WriteLine("cargo comando");
+
+            sqlCmd.Connection = myConnection;
+            myConnection.Open();
+            System.Diagnostics.Debug.WriteLine("estado " + myConnection.State);
+            reader = sqlCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                emp = new Role();
+                emp.R_ID = Convert.ToInt32(reader.GetValue(0));
+                emp.R_Description = reader.GetValue(1).ToString();
+                values.Add(emp);
+            }
+            myConnection.Close();
+            return Json(values);
+        }
         [HttpPost]
         [ActionName("Post")]
         public void AddRole(Role role)
@@ -28,7 +75,7 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             
 
-            sqlCmd.CommandText = "INSERT INTO ROLE(R_ID,R_Description) Values(@R_ID,@R_Description)";
+            sqlCmd.CommandText = "INSERT INTO EROLE(R_ID,R_Description) Values(@R_ID,@R_Description)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
@@ -37,17 +84,16 @@ namespace WebApplication1.Controllers
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(role);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(role);
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;
-                tmp.table = "ROLE";
+                tmp.table = "EROLE";
                 {
                     tmp.seller.Add(role.ID_Seller);
                 }
-                Models.Tasks.tasks.Add(tmp);
+                //Models.Tasks.tasks.Add(tmp);
                 System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
 
 

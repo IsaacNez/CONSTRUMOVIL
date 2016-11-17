@@ -16,23 +16,12 @@ namespace WebApplication1.Controllers
 {
     public class ProviderController : ApiController
     {
-        public static IList<Provider> prolist = new List<Provider>();
-        [AcceptVerbs("GET")]
-        public Provider RPCStyleMethodFetchFirstEmployees()
-        {
-            return prolist.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
-                + "Integrated Security=true;";
-        }
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
         public void UpdateRecords(Provider provider)
         {
-            string action = "UPDATE PROVIDER SET P_Name = " + provider.P_Name + ",P_LName = " + provider.P_LName+",P_Address = " + provider.P_Address+",P_Date = "+provider.P_Date+ ",P_Status = "+provider.P_Status + "WHERE P_ID =" + provider.P_ID;
+            string action = "UPDATE PROVIDER SET P_Name = '" + provider.P_Name + "',P_LName = '" + provider.P_LName+"',P_Address = '" + provider.P_Address+"',P_Date = "+provider.P_Date+ ",P_Status = '"+provider.P_Status + "' WHERE P_ID =" + provider.P_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -42,10 +31,10 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
+            
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(provider);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(provider);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -175,9 +164,8 @@ namespace WebApplication1.Controllers
             {
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
-                
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(provider);
+
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(provider);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;

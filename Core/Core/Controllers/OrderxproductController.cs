@@ -27,6 +27,7 @@ namespace WebApplication1.Controllers
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
            
             string action = "INSERT INTO ORDERXPRODUCT(OXP_ID,O_ID,PR_ID,PR_Name,PR_Amount,PR_Price) Values(@OXP_ID,@O_ID,@PR_ID,@PR_Name,@PR_Amount,@PR_Price)";
+            myConnection.Open();
 
             for (int i = 0; i < products.Length; i++)
             {
@@ -34,11 +35,12 @@ namespace WebApplication1.Controllers
                 SqlCommand sqlCmd2 = new SqlCommand();
                 sqlCmd2.Connection = myConnection;
                 sqlCmd2.CommandText = action;
-                sqlCmd2.Parameters.AddWithValue("@OXP_ID", rnd);
+                sqlCmd2.Parameters.AddWithValue("@OXP_ID", rnd.Next());
                 sqlCmd2.Parameters.AddWithValue("@PR_Name", products[i]);
                 sqlCmd2.Parameters.AddWithValue("@PR_Amount", Convert.ToInt32(values[i]));
                 sqlCmd2.Parameters.AddWithValue("@O_ID", order.O_ID);
                 sqlCmd2.Parameters.AddWithValue("@PR_ID", order.PR_ID);
+                sqlCmd2.Parameters.AddWithValue("@PR_Price", order.PR_Price);
                 rowInserted = sqlCmd2.ExecuteNonQuery();
             }
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();

@@ -31,7 +31,7 @@ namespace Core
                 );
             config.Routes.MapHttpRoute(
                 name: "Update",
-                routeTemplate: "api/{controller}/update/{attr}/{avalue}/{clause}/{id}",
+                routeTemplate: "api/{controller}/update/{id}",
                 defaults: new { id = RouteParameter.Optional}
                 );
             config.Routes.MapHttpRoute(

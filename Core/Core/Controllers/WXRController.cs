@@ -25,7 +25,7 @@ namespace WebApplication1.Controllers
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@R_ID", employee.R_ID);
             sqlCmd.Parameters.AddWithValue("@W_ID", employee.W_ID);
-            sqlCmd.Parameters.AddWithValue("@WXR_ID", rnd);
+            sqlCmd.Parameters.AddWithValue("@WXR_ID", rnd.Next());
             myConnection.Open();
             try
             {
@@ -39,7 +39,7 @@ namespace WebApplication1.Controllers
                 {
                     tmp.seller.Add(employee.ID_Seller);
                 }
-                Models.Tasks.tasks.Add(tmp);
+                //Models.Tasks.tasks.Add(tmp);
                 System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
             }
             catch (SqlException)

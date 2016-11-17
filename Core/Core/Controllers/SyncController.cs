@@ -26,40 +26,25 @@ namespace WebApplication1.Controllers
             List<Sync> values = new List<Sync>();
             string[] attr = attribute.Split(',');
             string[] ids = id.Split(',');
+            var seller_id = Convert.ToInt32(ids[0]);
             System.Diagnostics.Debug.WriteLine("entrando al for");
-            for (int i =0; i< Models.Tasks.tasks.Count; i++)
+            for (int i = 0; i < Tasks.tasks.Count ; i++)
             {
-                System.Diagnostics.Debug.WriteLine("entró al for inicial");
-                if (Models.Tasks.tasks[i].seller.Count==0)
+                if (Tasks.tasks[i].seller.Count == 0)
                 {
-                    for (int j = 0; j < Models.Tasks.tasks.Count; j++)
-                    {
-                        values.Add(Tasks.tasks[j]);
-
-                    }
-                        
-                    string jsonString1 = javaScriptSerializer.Serialize(values);
-
-                    System.Diagnostics.Debug.WriteLine(jsonString1);
-                    System.Diagnostics.Debug.WriteLine(jsonString1);
-                    System.Diagnostics.Debug.WriteLine(values.Count);
-
+                    Tasks.tasks[i].seller.Add(seller_id);
+                    values.Add(Tasks.tasks[i]);
                 }
-                else {
-                    for (int z = 0; z < Models.Tasks.tasks[i].seller.Count; z++)
-                    {
+                else if (Tasks.tasks[i].seller.Contains(seller_id))
+                {
+                    continue;
+                }
+                else if (Tasks.tasks[i].seller.Contains(seller_id) == false)
+                {
+                    Tasks.tasks[i].seller.Add(seller_id);
+                    values.Add(Tasks.tasks[i]);
+                }
 
-                        System.Diagnostics.Debug.WriteLine("seller_id=" + Models.Tasks.tasks[i].seller[z]);
-
-                        if (Models.Tasks.tasks[i].seller[z] != Convert.ToInt32(ids[0]))
-                        {
-                            Models.Tasks.tasks[i].seller.Add(Convert.ToInt32(ids[0]));
-                            values.Add(Models.Tasks.tasks[i]);
-                            string jsonString1 = javaScriptSerializer.Serialize(Models.Tasks.tasks[i]);
-
-                            System.Diagnostics.Debug.WriteLine(jsonString1);
-                        }
-                    } }
             }
             
             return Json(values);

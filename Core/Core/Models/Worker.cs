@@ -14,6 +14,6 @@ namespace WebApplication1.Models
         public string W_Address { get; set; }
         public int ID_Seller { get; set; }
         public string W_Password { get; set; }
-
+        public string W_Status { get; set; }
     }
 }

@@ -16,12 +16,12 @@ namespace WebApplication1.Controllers
     public class CategoryController : ApiController
     {
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
         public void UpdateRecords(Category category)
         {
      
-            string action = "UPDATE CATEGORY SET CA_Status = "+category.CA_Status+",CA_Description = "+category.CA_Description +"WHERE CA_ID =" + category.CA_ID;
+            string action = "UPDATE CATEGORY SET CA_Status = '"+category.CA_Status+"',CA_Description = '"+category.CA_Description +"' WHERE CA_ID =" + category.CA_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -33,8 +33,7 @@ namespace WebApplication1.Controllers
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(category);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(category);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -108,17 +107,7 @@ namespace WebApplication1.Controllers
         {
             string[] actions = attribute.Split(',');
             string[] ids = id.Split(',');
-            SqlConnection DeletePC = new SqlConnection();
-            DeletePC.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
-            SqlCommand PCmd = new SqlCommand();
-            PCmd.CommandType = CommandType.Text;
-            SucursalController deleteString = new SucursalController();
-            PCmd.CommandText = "DELETE FROM PC WHERE " + attribute + "='" + id + "';";
-            PCmd.Connection = DeletePC;
-            DeletePC.Open();
-            PCmd.ExecuteNonQuery();
-            DeletePC.Close();
+            
 
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -171,8 +160,7 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@CA_Status", category.CA_Status);
 
             myConnection.Open();
-            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            string jsonString = javaScriptSerializer.Serialize(category);
+            string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(category);
             try
             {
                 Sync tmp = new Sync();
@@ -180,7 +168,7 @@ namespace WebApplication1.Controllers
                 System.Diagnostics.Debug.Write("borró");
                 tmp.action = "INSERT";
                 tmp.model = jsonString;
-                tmp.table = "CATEGORY"
+                tmp.table = "CATEGORY";
                 if (category.ID_Seller != 0)
                 {
                     tmp.seller.Add(category.ID_Seller);

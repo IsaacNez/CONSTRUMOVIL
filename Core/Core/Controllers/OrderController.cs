@@ -20,7 +20,7 @@ namespace WebApplication1.Controllers
         [ActionName("Update")]
         public void UpdateRecords(Order order)
         {
-            string action = "UPDATE EORDER SET O_Priority = " + order.O_Status + ",O_Status = " + order.O_Status+",O_Date = "+order.O_Date+",O_PPhone = "+order.O_PPhone+ "WHERE O_ID =" + order.O_ID;
+            string action = "UPDATE EORDER SET O_Priority = " + order.O_Status + ",O_Status = '" + order.O_Status+"',O_Date = "+order.O_Date+",O_PPhone = "+order.O_PPhone+ " WHERE O_ID =" + order.O_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -28,12 +28,18 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
+            order.OXP_ID = 1;
+            order.PR_Amount = "null";
+            order.PR_ID = 1;
+            order.PR_Name = "null";
+            order.PR_Price = 1;
+            order.S_ID = 1;
+            order.W_ID = 1;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(order);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(order);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -161,8 +167,7 @@ namespace WebApplication1.Controllers
             try
             {
                 Sync tmp = new Sync();
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(order);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(order);
                 sqlCmd.ExecuteNonQuery();
                 var test = new OrderxproductController();
                 test.AddOrderxproduct(order);

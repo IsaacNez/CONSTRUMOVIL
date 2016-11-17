@@ -28,11 +28,11 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
         public void UpdateRecords(Sucursal sucursal)
         {
-            string action = "UPDATE SUCURSAL SET S_NAME = " + sucursal.S_Name + ",S_Address = " + sucursal.S_Address + "WHERE S_ID =" + sucursal.S_ID;
+            string action = "UPDATE SUCURSAL SET S_NAME = '" + sucursal.S_Name + "' ,S_Address = '" + sucursal.S_Address + "' WHERE S_ID =" + sucursal.S_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -42,10 +42,10 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
+            
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(sucursal);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(sucursal);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -203,9 +203,8 @@ namespace WebApplication1.Controllers
             {
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
-                
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(sucursal);
+
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(sucursal);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;

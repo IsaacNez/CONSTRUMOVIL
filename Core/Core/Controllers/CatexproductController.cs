@@ -31,9 +31,9 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("generando comando");
             sqlCmd.Connection = myConnection;
             Random rnd = new Random();
-            sqlCmd.Parameters.AddWithValue("@CXP_ID", rnd);
+            sqlCmd.Parameters.AddWithValue("@CXP_ID", rnd.Next());
             sqlCmd.Parameters.AddWithValue("@CA_ID", category.CA_ID);
-            sqlCmd.Parameters.AddWithValue("@CXP_Status", category.CXP_Status);
+            sqlCmd.Parameters.AddWithValue("@CXP_Status", "available");
             sqlCmd.Parameters.AddWithValue("@PR_ID", category.PR_ID);
             myConnection.Open();
             var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();

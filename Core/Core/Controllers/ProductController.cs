@@ -23,11 +23,11 @@ namespace WebApplication1.Controllers
                 + "Integrated Security=true;";
         }
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
         public void UpdateRecords(Product product)
         {
-            string action = "UPDATE PRODUCT SET PR_Name = " + product.PR_Name+ ",PR_Price = " + product.PR_Price +",PR_Exempt = "+product.PR_Exempt+",PR_Description = "+product.PR_Description+"PR_Quantity = "+product.PR_Quantity+"PR_Status = "+product.PR_Status+ "WHERE PR_ID =" + product.PR_ID;
+            string action = "UPDATE PRODUCT SET PR_Name = '" + product.PR_Name + "',PR_Price = " + product.PR_Price + ",PR_Exempt = " + product.PR_Exempt + ",PR_Description = '" + product.PR_Description + "',PR_Quantity = " + product.PR_Quantity + ",PR_Status = '" + product.PR_Status + "' WHERE PR_ID =" + product.PR_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -36,11 +36,16 @@ namespace WebApplication1.Controllers
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
+            product.CXP_ID = 1;
+            product.CXP_Status = "vacio";
+            product.CA_ID = "vacio";
+            product.P_ID = 0;
+            product.S_ID = 0;
+           
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(product);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(product);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -182,8 +187,7 @@ namespace WebApplication1.Controllers
                 sqlCmd.ExecuteNonQuery();
                 var test = new CatexproductController();
                 test.AddCategoryxproduct(product);
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(product);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(product);
                 System.Diagnostics.Debug.Write("insertó");
                 tmp.action = "insert";
                 tmp.model = jsonString;

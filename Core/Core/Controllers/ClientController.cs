@@ -16,11 +16,11 @@ namespace WebApplication1.Controllers
     public class ClientController : ApiController
     {
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
         public void UpdateRecords(Client client)
         {
-            string action = "UPDATE CLIENT SET C_Name = " + client.C_Name + ",C_LName = " + client.C_LName+",C_Address = "+client.C_Address+",C_Phone = "+client.C_Phone+",C_Date = "+client.C_Date+",C_Penalization = "+client.C_Penalization+"C_Status = "+client.C_Status + "WHERE C_ID =" + client.C_ID;
+            string action = "UPDATE CLIENT SET C_Name = '" + client.C_Name + "',C_LName = '" + client.C_LName+"',C_Address = '"+client.C_Address+"',C_Phone = "+client.C_Phone+",C_Date = "+client.C_Date+",C_Penalization = "+client.C_Penalization+"C_Status = '"+client.C_Status + "' WHERE C_ID =" + client.C_ID;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -32,8 +32,7 @@ namespace WebApplication1.Controllers
             myConnection.Open();
             try
             {
-                var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jsonString = javaScriptSerializer.Serialize(client);
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(client);
                 Sync tmp = new Sync();
                 sqlCmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine("Actualizó");
@@ -145,7 +144,7 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ActionName("Post")]
-        public void AddClient(Client client) 
+        public void AddClient(Client client)
         {
             //System.Diagnostics.Debug.WriteLine(client.C_ID);
             //System.Diagnostics.Debug.WriteLine(client.FName);
@@ -168,12 +167,12 @@ namespace WebApplication1.Controllers
             sqlCmd.Parameters.AddWithValue("@C_Phone", client.C_Phone);
             sqlCmd.Parameters.AddWithValue("@C_Date", client.C_Date);
             sqlCmd.Parameters.AddWithValue("@C_Penalization", client.C_Penalization);
-            sqlCmd.Parameters.AddWithValue("@C_Status", client.C_Status);
+            sqlCmd.Parameters.AddWithValue("@C_Status", "available");
 
             myConnection.Open();
             Sync tmp = new Sync();
-            var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            string jsonString = javaScriptSerializer.Serialize(client);
+
+            string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(client);
             sqlCmd.ExecuteNonQuery();
             System.Diagnostics.Debug.Write("insertó");
             tmp.action = "insert";
@@ -184,7 +183,7 @@ namespace WebApplication1.Controllers
                 tmp.seller.Add(client.ID_Seller);
             }
             Models.Tasks.tasks.Add(tmp);
-            System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+            System.Diagnostics.Debug.WriteLine("cliente serialize:" + Newtonsoft.Json.JsonConvert.SerializeObject(client));
             myConnection.Close();
         }
     }
