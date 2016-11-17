@@ -2,7 +2,8 @@
 var url= 'http://bryan:7580';
 var userI = localStorage.userID;
 var userN = localStorage.userName;
-
+var SucursalID;
+var ClientID;
 /**
  * Modal where the user can sign in
 */
@@ -128,5 +129,84 @@ var stageForm = angular.module('clientView',[])
              alert('Error while posting the new order')
         });
         }
+    
+}]);
+
+var worker;
+var values;
+stageForm = angular.module('clientView')
+.controller('editOrdersCtrl', ['$scope', '$http', function ($scope, $http) { 
+    
+    
+
+     
+        
+    var information={};  
+    
+ 
+    $http.get(url+'/api/order/get/O_ID/undefined')
+                .then( function (response) {  
+               console.log(response.data[0]);
+                  $scope.orders = response.data;           
+            });
+    
+    $scope.editOrder = function(item){
+       
+      $http.get(url+'/api/order/get/O_ID/'+item)
+                .then( function (response) {    
+                  information = response.data[0];
+                  console.log(information);
+                    console.log(information.O_ID);
+                localStorage.setItem("clientId", information.C_ID); 
+                localStorage.setItem("sucursalId", information.S_ID);
+                 SucursalID=localStorage.clientId;
+                 ClientID=localStorage.sucursalId;
+                 console.log("Sucu " + SucursalID + " Clien " + ClientID + " Phone " + information.O_PPhone);
+
+                  $('#O_IDU').val(information.O_ID);
+                  $('#O_PriorityU').val(information.O_Priority);
+                  $('#O_StatusU').val(information.O_Status);
+        
+               
+                  
+                  $('#O_PhoneU').val(information.O_PPhone);
+          
+          
+        });
+        values=$scope.information;
+        
+      
+             
+    }
+    $scope.deleteOrder = function(item){
+         console.log("eliminando "+item);
+         $http.get(url+'/api/order/delete/O_ID/'+item+",0")
+                .then( function (response) {    
+                  $scope.orders = response.data;           
+            });
+    }
+    $scope.updateOrder = function () {
+        var Order = {
+            "O_ID": parseInt($scope.O_IDU),
+            "S_ID": parseInt(SucursalID),
+            "C_ID": parseInt(ClientID),
+            "W_ID": parseInt(userI),
+            "O_Priority": parseInt($scope.O_PriorityU),
+            "O_Status": $scope.O_StatusU,
+            "O_Date": $scope.O_DateU,
+            "O_PPhone": parseInt($scope.O_PhoneU)
+        }
+        console.log(Order);
+        $http.put(url +'/api/order/update',Order).
+        success(function (data, status, headers, config) {
+            alert('the new order has been posted!');
+        }).
+        error(function (data, status, headers, config) {
+            alert('Error while posting the new order')
+        });
+      
+    }
+  
+    
     
 }]);
