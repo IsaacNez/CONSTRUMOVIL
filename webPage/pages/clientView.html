@@ -41,7 +41,9 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="/pages/clientView.html">Home</a></li>
             <li class="active" id="newOrder"><a href="#">Make Order</a></li>
-       
+              
+             <li class="active" id="editOrder" role="button" data-toggle="modal" data-target="#editOrdersModal"><a href="#">Orders</a></li>
+
 
           </ul>
 
@@ -49,6 +51,7 @@
 
             <li id="myBtn"><a href="/index.html"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
           </ul>
+         
         </div>
       </div>
     </nav>
@@ -152,6 +155,106 @@
   </div>
 </div>
     
+        
+    
+      <!-- POP UP CREATE EDIT ORDER -->
+    <div id="editOrdersModal" class="modal"  ng-controller="editOrdersCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+         <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Order</h2>
+            </div>
+                    <div class="modal-body">
+            
+
+                                <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                                    <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
+                                            <table id="table" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >    
+                                                        <th>
+                                                            <h4><b>Order ID</b>
+                                                            </h4>
+                                                        </th>  
+                                                        <th >
+                                                            <h4><b>Status</b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>   
+                                                        <th> 
+                                                            <h4><b> Options </b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                       <tr ng-repeat="item in orders"> 
+                                                        
+                                                        <td>{{item.O_ID}}</td>
+                                                        <td>{{item.O_Status}}</td>
+                                                        <td>
+                                                            <div  align="center" class="btn-group">    
+                                                                <a data-toggle="tooltip" title="Edit Order">
+
+                                                                    <button id="editOrder" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editOrderModal" ng-click="editOrder(item.O_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                </a>
+                                                                <a data-toggle="tooltip" title="Delete Order">
+                                                                    <button id="deleteOrder" type="button" class="btn btn-success" ng-click="deleteOrder(item.O_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                </a>
+                                                              
+                                                            </div>
+                                                        </td>
+                                                       </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div> 
+                </div>
+             </div>
+        </div>
+    
+    
+     <!-- POP UP TO EDIT ORDER INFORMATION -->
+    <div id="editOrderModal"   ng-controller="editOrdersCtrl" style="overflow-y: scroll;" class="modal fade" role="dialog" style="z-index: 1400;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Order</h2>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="O_ID">Order ID</label>
+                        <input  id="O_IDU" ng-model="O_IDU" class="form-control">
+                    </div>
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="O_Priority">Order Priority</label>
+                        <input contenteditable='true' id="O_PriorityU" ng-model="O_PriorityU" class="form-control">
+                    </div>
+                  
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="O_Status">Order Status</label>
+                        <input contenteditable='true'  id="O_StatusU" ng-model="O_StatusU" class="form-control"  name="O_StatusU">
+                    </div>
+                
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="O_DateU">Order Date</label>
+                        <input contenteditable='true' id="O_DateU" ng-model="O_DateU" class="form-control" type="date" > 
+                    </div>
+                 
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="O_PhoneU">Order Phone</label>
+                        <input contenteditable='true' name="O_PhoneU" id="O_PhoneU" ng-model="O_PhoneU" class="form-control">
+                    </div>
+
+                    <div align="center">
+                        <button  ng-click="updateOrder()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Order</button>
+                    </div>
+               </div>   
+            </div>
+         
+    </div>
 
 </body>
 </html>
