@@ -86,20 +86,37 @@ var stageForm = angular.module('clientView',[])
        }
         
         $scope.sendOrder = function () {
-            var d = new Date();
-            var randomOrder = parseInt((Math.floor((Math.random() * 1000000) + 1)* d.getHours())/d.getMinutes()+d.getMilliseconds());
+        var today = new Date();// Take the system date
+            var randomOrder = parseInt((Math.floor((Math.random() * 1000000) + 1)* today.getHours())/today.getMinutes()+today.getMilliseconds());
             console.log(randomOrder);
+            
+       
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        // if the day have one digit return like 9 or 8 ect, so add it 0 to return 09 and 08
+        if(dd<10) {
+            dd='0'+dd
+        } 
+        // if the same soution about the day
+        if(mm<10) {
+            mm='0'+mm
+        } 
+        // Concatenate the year-month-day
+        today = yyyy+'-'+mm+'-'+dd;
+            console.log(" date " + date)
             
           order={
               "O_ID": randomOrder,
               "S_ID": $scope.branchStore,
               "C_ID": $scope.clientid,
               "W_ID": userI,
+              "O_PPhone": $scope.phone,
               "O_Status":$scope.status,
               "PR_Name": products,
               "PR_Amount": amounts,
               "O_Priority": 0,
-              "O_Date": $scope.date
+              "O_Date": today
               
           }
           console.log(order);
