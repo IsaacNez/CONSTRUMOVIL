@@ -3,7 +3,7 @@ go
 USE EPATEC;
 
 CREATE TABLE CATEGORY(
-	CA_ID int,
+	CA_ID varchar(255),
 	CA_Description varchar(255) NULL,
 	CA_Status varchar(255),
 	PRIMARY KEY(CA_ID)
@@ -92,7 +92,7 @@ CREATE TABLE EROLE(
 CREATE TABLE CATEXPRODUCT(
 	CXP_ID int,
 	CXP_Status varchar(255),
-	CA_ID INT,
+	CA_ID varchar(255),
 	PR_ID INT,
 	PRIMARY KEY(CXP_ID)
 )
