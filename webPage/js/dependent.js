@@ -1,20 +1,21 @@
 var link='http://bryan:7580';
 var app=angular.module('dependentView',[])
 .controller('movilCtrl', ['$scope', '$http',function ($scope, $http) {
-     var orders;$http.get(link + '/api/order/get/S_ID/undefined')
+     var orders;
+    /*$http.get(link + '/api/order/get/S_ID/undefined')
             .then( function (response) {    
               $scope.branchStores = response.data;           
-        });
+        });*/
 }]);
 
 app = angular.module('dependentView')
 .controller('storeCtrl', ['$scope', '$http', function ($scope, $http) {
      var orders;
-     $http.get(link + '/api/order/get/ordenes/undefined')
+    /* $http.get(link + '/api/order/get/ordenes/undefined')
             .then( function (response) {    
               $scope.orders = response.data;
               console.log(response.data);
-        });
+        });*/
 }]);
 
 app = angular.module('dependentView')
@@ -38,11 +39,12 @@ app = angular.module('dependentView')
             "W_LName": $scope.E_LName,
             "W_Address": $scope.E_Address,
             "W_Password": $scope.E_Pass,
+            "W_Status": $scope.E_Pass,
             "R_ID":$scope.E_Charge
             
         }
         console.log(Employee);
-        $http.post(link + '/api/worker/post',Employee).
+        $http.post(link + '/api/employees/post',Employee).
         success(function (data, status, headers, config) {
             alert('the new employee has been posted!');
         }).
@@ -60,9 +62,15 @@ app = angular.module('dependentView')
     var categories;
     var sucursals;
     var employees;
+    var providers;
+    
     $http.get(link + '/api/category/get/CA_ID/undefined')
             .then( function (response) {    
               $scope.categories = response.data;           
+        });
+     $http.get(link + '/api/provider/get/P_ID/undefined')
+            .then( function (response) {    
+              $scope.providers = response.data;           
         });
     $http.get(link + '/api/sucursal/get/S_ID/undefined')
             .then( function (response) {    
@@ -70,17 +78,22 @@ app = angular.module('dependentView')
         });
       
     $scope.createProduct = function () {
+          var n1 = $scope.PR_ID.indexOf("-");
+            var res1 = $scope.PR_ID.substring(0, n1);
+
+            var n2 = $scope.S_ID.indexOf("-");
+            var res2 = $scope.S_ID.substring(0, n2);
         var product = {
             "PR _ID": $scope.P_ID,
             "PR_Name": $scope.P_Name,
-            "PR_Descrition": $scope.P_Description,
+            "PR_Description": $scope.P_Description,
             "PR_Exempt": $scope.P_Excent,
             "PR_Price": $scope.P_Price,
             "PR_Quantity":$scope.P_Amount,
             "PR_Status":$scope.P_Status,
             "CA_ID": $scope.CA_ID,
-            "P_ID":$scope.PR_ID,
-            "S_ID":$scope.S_ID
+            "P_ID":parseInt(res1),
+            "S_ID":parseInt(res2)
             
         }
         console.log(product);
@@ -98,6 +111,7 @@ app = angular.module('dependentView')
 app = angular.module('dependentView')
 .controller('providerCtrl', ['$scope', '$http', function ($scope, $http) {
     var branchStores;
+    
     
     $http.get(link+'/api/sucursal/get/S_ID/undefined')
             .then( function (response) {    
@@ -131,7 +145,7 @@ app = angular.module('dependentView')
     $scope.createCategory = function () {
         var category = {
             "CA_ID": $scope.CA_ID,
-            "CDescription": $scope.CA_Description,
+            "CA_Description": $scope.CA_Description,
             "CA_Status":$scope.CA_Status
             
         }
@@ -182,14 +196,15 @@ app = angular.module('dependentView')
     $scope.createClient = function () {
       
         
-        month = date.getMonth() + 1;
+        
         var Client = {
             "C_ID": $scope.C_ID,
             "C_Name": $scope.C_Name,
             "C_LName": $scope.C_LName,
             "C_Address": $scope.C_Address,
             "C_Phone": $scope.C_Phone,
-            "C_Date": $scope.C_BirthDate,      "C_Penalization":$scope.C_Penalization,
+            "C_Date": $scope.C_BirthDate,     
+            "C_Penalization":$scope.C_Penalization,
             "C_Password":$scope.C_Pass
         }
         console.log(Client); 
@@ -202,41 +217,64 @@ app = angular.module('dependentView')
         });
     }
 }]);
-
+var worker;
+var values;
 app = angular.module('dependentView')
 .controller('editEmployeesCtrl', ['$scope', '$http', function ($scope, $http) { 
-    
-    var employees;
+    var information={};  
+    var workers;
     $scope.getEmployees = function(){
+        console.log("geteando");
         $http.get(link+'/api/employees/get/W_ID/undefined')
                 .then( function (response) {    
-                  $scope.employees = response.data;           
+                  $scope.workers = response.data;           
             });
     }
+    $scope.editEmployee = function(item){
+        
+       
+      $http.get(link+'/api/employees/get/W_ID/'+item)
+                .then( function (response) {    
+                  information = response.data[0];
+                  console.log(information);
+                    console.log(information.W_ID);
+                  console.log(information.W_Name);
+               /*   document.getElementById("E_IDU").innerHTML = information.W_ID;
+                  document.getElementById("E_NameU").innerHTML = information.W_Name;
+                  document.getElementById("E_LNameU").innerHTML = information.W_LName;
+                  document.getElementById("E_AddressU").innerHTML = information.W_Address;
+                  document.getElementById("E_PassU").innerHTML = information.W_Password;*/
+                  $('#E_IDU').val(information.W_ID);
+                  $('#E_NameU').val(information.W_Name);
+                  $('#E_LNameU').val(information.W_LName);
+                  $('#E_AddressU').val(information.W_Address);
+                  $('#E_PassU').val(information.W_Password);
+          
+          
+        });
+        values=$scope.information;
+        
+      
+             
+    }
     $scope.deleteEmployee = function(item){
-         console.log("eliminando");
-         $http.get(link+'/api/employees/delete/W_ID/item')
+         console.log("eliminando "+item);
+         $http.get(link+'/api/employees/delete/W_ID/'+item+",0")
                 .then( function (response) {    
                   $scope.employees = response.data;           
             });
     }
-  
-    
-    
-}]);
-
-app = angular.module('dependentView')
-.controller('editEmployeeCtrl', ['$scope', '$http', function ($scope, $http) { 
-      $scope.updateEmployee = function () {
+    $scope.updateEmployee = function () {
         var Employee = {
-            "W_ID": $scope.E_ID,
-            "W_Name": $scope.E_Name,
-            "W_LName": $scope.E_LName,
-            "W_Address": $scope.E_Address,
-            "W_Password": $scope.E_Pass
+            "W_ID": $scope.E_IDU,
+            "W_Name": $scope.E_NameU,
+            "W_LName": $scope.E_LNameU,
+            "W_Address": $scope.E_AddressU,
+            "W_Password": $scope.E_PassU,
+            "W_Status": $scope.E_PassU,
         }
         console.log(Employee);
-        $http.post(link +'/api/employees/post',Employee).
+        $http.put(link +'/api/employees/update',Employee).
         success(function (data, status, headers, config) {
             alert('the new employee has been posted!');
         }).
@@ -245,5 +283,8 @@ app = angular.module('dependentView')
         });
       
     }
-
+  
+    
+    
 }]);
+

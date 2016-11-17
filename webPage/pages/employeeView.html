@@ -254,7 +254,7 @@
                 
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="P_Excent" >Write a Excent Status</label>
-                    <input id=P_Excent type="text" ng-model="P_Excent" class="form-control" placeholder="Excent">
+                    <input id=P_Excent type="number" ng-model="P_Excent" class="form-control" placeholder="Excent">
                     <span class="glyphicon glyphicon-link form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
@@ -269,10 +269,16 @@
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Status" >Write a Product Status </label>
+                    <input id=P_Status type="text" ng-model="P_Status" class="form-control" placeholder="Product Status">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="CA_ID">Select Categorie</label>
                     <select type="text" name="CA_ID" ng-model="CA_ID" id= "CA_ID" placeholder="Select User Role" class="form-control"  >
-                    <option ng-repeat="item in categories">{{item.CA_ID}}-{{item.CA_Name}} </option>
+                    <option ng-repeat="item in categories">{{item.CA_ID}} </option>
                     </select>
                 </div>
                 
@@ -374,7 +380,7 @@
             <div class="modal-body">
                  <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
                     <label for="CA_ID" >Write a Category ID</label>
-                    <input id=CA_ID type="number" ng-model="CA_ID" class="form-control" placeholder="Category ID">
+                    <input id=CA_ID type="text" ng-model="CA_ID" class="form-control" placeholder="Category ID">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
@@ -383,12 +389,12 @@
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="CA_Status" >Write a Category Description</label>
+                    <label for="CA_Status" >Write a Category Status</label>
                     <input id=CA_Status type="text" ng-model="CA_Status" class="form-control" placeholder="Category Status">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div align="center">
-                    <button  ng-click="createCategory()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Client</button>
+                    <button  ng-click="createCategory()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create CAtegory</button>
                 </div>  
                   
             </div>
@@ -526,18 +532,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                       <!--<tr ng-repeat="item in clients"> -->
-                                                        <tr>
-                                                        <td>item.s_name</td>
-                                                        <td>item.s_description</td>
+                                                       <tr ng-repeat="item in workers"> 
+                                                        
+                                                        <td>{{item.W_Name}} {{item.W_LName}} </td>
+                                                        <td>{{item.W_ID}}</td>
                                                         <td>
                                                             <div  align="center" class="btn-group">    
                                                                 <a data-toggle="tooltip" title="Edit Employee">
 
-                                                                    <button id="editEmployee" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editEmployeeModal" ng-click="editEmployee(item)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                    <button id="editEmployee" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editEmployeeModal" ng-click="editEmployee(item.W_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
                                                                 </a>
                                                                 <a data-toggle="tooltip" title="Delete Employee">
-                                                                    <button id="deleteEmployee" type="button" class="btn btn-success" ng-click="deleteEmployee(item)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                    <button id="deleteEmployee" type="button" class="btn btn-success" ng-click="deleteEmployee(item.W_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
                                                                 </a>
                                                               
                                                             </div>
@@ -551,7 +557,7 @@
              </div>
         </div>
     <!-- POP UP TO EDIT EMPLOYEE INFORMATION -->
-    <div id="editEmployeeModal"   ng-controller="editEmployeeCtrl" style="overflow-y: scroll;" class="modal fade" role="dialog" style="z-index: 1400;" >
+    <div id="editEmployeeModal"   ng-controller="editEmployeesCtrl" style="overflow-y: scroll;" class="modal fade" role="dialog" style="z-index: 1400;" >
       <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
@@ -559,33 +565,33 @@
               <h2>Edit Employee</h2>
             </div>
             <div class="modal-body">
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="E_ID">Employee ID</label>
-                    <input contenteditable='false' id="E_ID" ng-model="E_ID" class="form-control">{{item.W_ID}}
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="E_Name">Employee Name</label>
-                    <input contenteditable='true' id="E_Name" ng-model="E_Name" class="form-control">{{item.W_Name}}
-                </div>
-                <div>
-                    <label for="E_LName">Employee Last Name</label>
-                    <input contenteditable='true' id="E_LName" ng-model="E_LName" class="form-control">{{item.W_LName}}
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="E_Address">Employee Address</label>
-                    <input contenteditable='true' id="E_Address" ng-model="E_Address" class="form-control">{{item.W_Address}}
-                </div>
-                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
-                    <label for="E_Pass">Employee Password</label>
-                    <input contenteditable='true' id="E_Pass" ng-model="E_Pass" class="form-control">{{item.W_Password}}
-                </div>
-                    
-                <div align="center">
-                    <button  ng-click="updateEmployee()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Client</button>
-                </div>
-                  
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="E_ID">Employee ID</label>
+                        <input contenteditable='false' id="E_IDU" ng-model="E_IDU" class="form-control">
+                    </div>
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="E_Name">Employee Name</label>
+                        <input contenteditable='true' id="E_NameU" ng-model="E_NameU" class="form-control">
+                    </div>
+                    <div>
+                        <label for="E_LName">Employee Last Name</label>
+                        <input contenteditable='true' id="E_LNameU" ng-model="E_LNameU" class="form-control">
+                    </div>
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="E_Address">Employee Address</label>
+                        <input contenteditable='true' id="E_AddressU" ng-model="E_AddressU" class="form-control">
+                    </div>
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                        <label for="E_PassU">Employee Password</label>
+                        <input contenteditable='true' id="E_PassU" ng-model="E_PassU" class="form-control">
+                    </div>
+
+                    <div align="center">
+                        <button  ng-click="updateEmployee()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Client</button>
+                    </div>
+               </div>   
             </div>
-        </div> 
+         
     </div>
       <!-- POP UP CREATE GET NEW PRODUCT -->
     <div id="editProductsModal" class="modal"  ng-controller="editProductCtrl" style="overflow-y: scroll;" >
