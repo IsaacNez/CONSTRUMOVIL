@@ -593,24 +593,8 @@
             </div>
          
     </div>
-      <!-- POP UP CREATE GET NEW PRODUCT -->
-    <div id="editProductsModal" class="modal"  ng-controller="editProductCtrl" style="overflow-y: scroll;" >
-      <!-- Modal content -->
-        <div class="modal-content">
-            <div class="modal-header">
-              <span id="close2" class="close">×</span>
-              <h2>Edit Products</h2>
-                            
-                            
-            </div>
-            <div class="modal-body">
-                    
-            </div>
-        </div> 
-    </div>
-    
-      <!-- POP UP CREATE NEW PROVIDER -->
-    <div id="editProvidersModal" class="modal"  ng-controller="editProviderCtrl" style="overflow-y: scroll;" >
+    <!-- POP UP EDTIT PROVIDER -->
+    <div id="editProvidersModal" class="modal"  ng-controller="editProvidersCtrl" style="overflow-y: scroll;" >
       <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
@@ -618,14 +602,259 @@
               <h2>Edit Providers</h2>
             </div>
             <div class="modal-body">
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                                        <label for="P_Name">Provider Name</label>
+                                        <input id=P_Name type="text" ng-model="P_Name" ng-change="getProviders()" class="form-control" placeholder="Write Provider Name"><span class="glyphicon glyphicon-log-out form-control-feedback"></span>
+                                </div>
+                                <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                                    <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
+                                            <table id="table" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >    
+                                                        <th>
+                                                            <h4><b>Name</b>
+                                                            </h4>
+                                                        </th>  
+                                                        <th >
+                                                            <h4><b>ID</b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>   
+                                                        <th> 
+                                                            <h4><b> Options </b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                       <tr ng-repeat="item in providers"> 
+                                                        
+                                                        <td>{{item.P_Name}} {{item.P_LName}} </td>
+                                                        <td>{{item.P_ID}}</td>
+                                                        <td>
+                                                            <div  align="center" class="btn-group">    
+                                                                <a data-toggle="tooltip" title="Edit Provider">
+
+                                                                    <button id="editEmployee" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editProviderModal" ng-click="editProvider(item.P_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                </a>
+                                                                <a data-toggle="tooltip" title="Delete Provider">
+                                                                    <button id="deleteProvider" type="button" class="btn btn-success" ng-click="deleteProvider(item.P_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                </a>
+                                                              
+                                                            </div>
+                                                        </td>
+                                                       </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div> 
+                  
+            </div>
+        </div> 
+    </div>
+     <!-- POP UP TO EDIT PROVIDER INFORMATION -->
+    <div id="editProviderModal"   ng-controller="editProvidersCtrl" style="overflow-y: scroll;" class="modal fade" role="dialog" style="z-index: 1400;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Provider Information</h2>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_ID" >Write a Provider ID</label>
+                    <input  contenteditable='false' id=P_ID type="number" ng-model="P_ID" class="form-control" placeholder="Provider ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Name" >Write a Provider Name</label>
+                    <input  contenteditable='true' id=P_Name type="text" ng-model="P_Name" class="form-control" placeholder="Provider Name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_LName" >Write a Provider LastName</label>
+                    <input  contenteditable='true' id=P_LName type="text" ng-model="P_LName" class="form-control" placeholder="Provider lastName">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Address" >Write an Address</label>
+                    <input  contenteditable='true' id=P_Address type="text" ng-model="P_Address" class="form-control" placeholder="Address">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Phone" >Write a Provider Phone</label>
+                    <input  contenteditable='true' id=P_Phone type="number" ng-model="P_Phone" class="form-control" placeholder="Provider Phone">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+        
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Date" >Write a Birthdate Date  </label>
+                    <input  contenteditable='true' id=P_Date type="date" ng-model="P_Date" class="form-control" placeholder="Date">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_Status" >Write Status</label>
+                    <input  contenteditable='true' id=P_Status type="text" ng-model="P_Status" class="form-control" placeholder="Provider Status">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                <label for="S_ID">Select a BrachStore</label>
+                    <select type="number" id = "S_ID" class="form-control"  name="S_ID" ng-model="S_ID" placeholder="Select a Brach Store" >
+                    <option ng-repeat="item in branchStores">{{item.S_ID}}</option>
+                    </select>
+                </div>
+                
+
+                    <div align="center">
+                        <button  ng-click="updateProvider()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Provider</button>
+                    </div>
+               </div>   
+            </div>
+         
+    </div>
+    
+     <!-- POP UP EDIT PRODUCTS -->
+    <div id="editProductsModal" class="modal"  ng-controller="editProductsCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Products</h2>
+            </div>
+            <div class="modal-body">
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                                        <label for="PR_Name">Product Name</label>
+                                        <input id=PR_Name type="text" ng-model="PR_Name" ng-change="getProducts()" class="form-control" placeholder="Write Products Name"><span class="glyphicon glyphicon-log-out form-control-feedback"></span>
+                                </div>
+                                <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                                    <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
+                                            <table id="table" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >    
+                                                        <th>
+                                                            <h4><b>Name</b>
+                                                            </h4>
+                                                        </th>  
+                                                        <th >
+                                                            <h4><b>ID</b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>   
+                                                        <th> 
+                                                            <h4><b> Options </b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                       <tr ng-repeat="item in products"> 
+                                                        
+                                                        <td>{{item.PR_Name}} {{item.PR_LName}} </td>
+                                                        <td>{{item.PR_ID}}</td>
+                                                        <td>
+                                                            <div  align="center" class="btn-group">    
+                                                                <a data-toggle="tooltip" title="Edit Provider">
+
+                                                                    <button id="editProduct" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editProductModal" ng-click="editProduct(item.PR_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                </a>
+                                                                <a data-toggle="tooltip" title="Delete Provider">
+                                                                    <button id="deleteProduct" type="button" class="btn btn-success" ng-click="deleteProduct(item.PR_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                </a>
+                                                              
+                                                            </div>
+                                                        </td>
+                                                       </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div> 
                   
             </div>
         </div> 
     </div>
     
-
-        <!-- POP UP CREATE NEW CATEGORIE -->
-    <div id="editCategoriesModal" class="modal"  ng-controller="editCategorieCtrl" style="overflow-y: scroll;" >
+      <!-- POP UP EDIT PRODUCT INFORMATION-->
+    <div id="editProductModal" class="modal"  ng-controller="editProductsCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Products</h2>        
+            </div>
+            <div class="modal-body">
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_ID" >Write a Product ID</label>
+                    <input contenteditable='true' id=PR_ID type="number" ng-model="PR_ID" class="form-control" placeholder="Product ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Name" >Write a Product Name</label>
+                    <input contenteditable='true' id=PR_Name type="text" ng-model="PR_Name" class="form-control" placeholder="Product Name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Description" >Write a Product Description</label>
+                    <input contenteditable='true' id=PR_Description type="text" ng-model="PR_Description" class="form-control" placeholder="Product Description">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Excent" >Write a Excent Status</label>
+                    <input  contenteditable='true' id=PR_Excent type="number" ng-model="PR_Excent" class="form-control" placeholder="Excent">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Price" >Write a Product Price</label>
+                    <input  contenteditable='true' id=PR_Price type="number" ng-model="PR_Price" class="form-control" placeholder="Product Price">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Amount" >Write an amount Product </label>
+                    <input contenteditable='true' id=PR_Amount type="number" ng-model="PR_Amount" class="form-control" placeholder="Product Amount">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
+                 <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="PR_Status" >Write a Product Status </label>
+                    <input contenteditable='true' id=PR_Status type="text" ng-model="PR_Status" class="form-control" placeholder="Product Status">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_ID">Select Category</label>
+                    <select type="text" name="CA_ID" ng-model="CA_ID" id= "CA_ID" placeholder="Select User Role" class="form-control"  >
+                    <option ng-repeat="item in categories">{{item.CA_ID}} </option>
+                    </select>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="P_ID">Select Provider</label>
+                    <select type="text" name="P_ID" ng-model="P_ID" id = "P_ID" placeholder="Select User Role" class="form-control" id="sel1" >
+                    <option ng-repeat="item in providers">{{item.P_ID}}-{{item.P_Name}} </option>
+                    </select>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_ID">Select Sucursal</label>
+                    <select type="text" name="S_ID" ng-model="S_ID" id = "S_ID" placeholder="Select Sucursal" class="form-control" id="sel1" >
+                    <option ng-repeat="item in sucursals">{{item.S_ID}}-{{item.S_Name}} </option>
+                    </select>
+                </div>
+                <div align="center">
+                    <button  ng-click="updateProduct()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Product</button>
+                </div>
+                    
+            </div>
+        </div> 
+    </div>
+    
+    
+   
+    
+     <!-- POP UP EDIT CATEGORIES -->
+    <div id="editCategoriesModal" class="modal"  ng-controller="editCategoriesCtrl" style="overflow-y: scroll;" >
       <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
@@ -633,13 +862,149 @@
               <h2>Edit Categories</h2>
             </div>
             <div class="modal-body">
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                                        <label for="CA_Name">Category Name</label>
+                                        <input id=CA_Name type="text" ng-model="CA_Name" ng-change="getCategories()" class="form-control" placeholder="Write Category Name"><span class="glyphicon glyphicon-log-out form-control-feedback"></span>
+                                </div>
+                                <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                                    <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
+                                            <table id="table" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >    
+                                                        <th>
+                                                            <h4><b>Name</b>
+                                                            </h4>
+                                                        </th>  
+                                                        <th >
+                                                            <h4><b>ID</b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>   
+                                                        <th> 
+                                                            <h4><b> Options </b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                       <tr ng-repeat="item in categories"> 
+                                                        
+                                                        <td>{{item.CA_Name}} {{item.CA_LName}} </td>
+                                                        <td>{{item.CA_ID}}</td>
+                                                        <td>
+                                                            <div  align="center" class="btn-group">    
+                                                                <a data-toggle="tooltip" title="Edit Provider">
+
+                                                                    <button id="editCategory" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editCategoryModal" ng-click="editCategory(item.CA_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                </a>
+                                                                <a data-toggle="tooltip" title="Delete Provider">
+                                                                    <button id="deleteCategory" type="button" class="btn btn-success" ng-click="deleteCategory(item.CA_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                </a>
+                                                              
+                                                            </div>
+                                                        </td>
+                                                       </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div> 
                   
             </div>
         </div> 
     </div>
+        <!-- POP UP CREATE NEW CATEGORIE -->
+    <div id="editCategoryModal" class="modal"  ng-controller="editCategoriesCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Categories</h2>
+                  
+            </div>
+            <div class="modal-body">
+                  <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_ID" >Write a Category ID</label>
+                    <input contenteditable='false'  id=CA_ID type="text" ng-model="CA_ID" class="form-control" placeholder="Category ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_Description" >Write a Category Description</label>
+                    <input contenteditable='true'  id=CA_Description type="text" ng-model="CA_Description" class="form-control" placeholder="Category Description">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="CA_Status" >Write a Category Status</label>
+                    <input contenteditable='true'  id=CA_Status type="text" ng-model="CA_Status" class="form-control" placeholder="Category Status">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div align="center">
+                    <button  ng-click="updateCategory()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Category</button>
+                </div>
+            </div>
+        </div> 
+    </div>
     
-         <!-- POP UP CREATE NEW STORE -->
+      <!-- POP UP EDIT STORES -->
     <div id="editStoresModal" class="modal"  ng-controller="editStoresCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Sucursals</h2>
+            </div>
+            <div class="modal-body">
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                                        <label for="S_Name">Sucursal Name</label>
+                                        <input id=S_Name type="text" ng-model="S_Name" ng-change="getSucursals()" class="form-control" placeholder="Write Sucursal Name"><span class="glyphicon glyphicon-log-out form-control-feedback"></span>
+                                </div>
+                                <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                                    <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
+                                            <table id="table" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >    
+                                                        <th>
+                                                            <h4><b>Name</b>
+                                                            </h4>
+                                                        </th>  
+                                                        <th >
+                                                            <h4><b>ID</b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>   
+                                                        <th> 
+                                                            <h4><b> Options </b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                       <tr ng-repeat="item in stores"> 
+                                                        
+                                                        <td>{{item.S_Name}} {{item.S_LName}} </td>
+                                                        <td>{{item.S_ID}}</td>
+                                                        <td>
+                                                            <div  align="center" class="btn-group">    
+                                                                <a data-toggle="tooltip" title="Edit Provider">
+
+                                                                    <button id="editStore" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editStoreModal" ng-click="editSucursal(item.S_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                </a>
+                                                                <a data-toggle="tooltip" title="Delete Provider">
+                                                                    <button id="deleteStore" type="button" class="btn btn-success" ng-click="deleteSucursal(item.S_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                </a>
+                                                              
+                                                            </div>
+                                                        </td>
+                                                       </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div> 
+                  
+            </div>
+        </div> 
+    </div>
+         <!-- POP UP CREATE NEW STORE -->
+    <div id="editStoreModal" class="modal"  ng-controller="editStoresCtrl" style="overflow-y: scroll;" >
       <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
@@ -647,12 +1012,30 @@
               <h2>Edit BrachStores</h2>
             </div>
             <div class="modal-body">
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_ID" >Write a BranchStore ID</label>
+                    <input  contenteditable='false' id=S_ID type="number" ng-model="S_ID" class="form-control" placeholder="BranchStore ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_Name" >Write a BranchStore Name</label>
+                    <input  contenteditable='true'  id=S_Name type="text" ng-model="S_Name" class="form-control" placeholder="BranchStore Name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="S_Address" >Write a BranchStore Address</label>
+                    <input contenteditable='true'  id=S_Address type="text" ng-model="S_Address" class="form-control" placeholder="BranchStore Address">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div align="center">
+                    <button  ng-click="updateSucursal()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Create Client</button>
+                </div>  
+                
                   
             </div>
         </div> 
     </div>
-    
-         <!-- POP UP CREATE NEW CLIENT -->
+          <!-- POP UP EDIT CLIENTS -->
     <div id="editClientsModal" class="modal"  ng-controller="editClientsCtrl" style="overflow-y: scroll;" >
       <!-- Modal content -->
         <div class="modal-content">
@@ -661,6 +1044,113 @@
               <h2>Edit Clients</h2>
             </div>
             <div class="modal-body">
+                     <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                                        <label for="C_Name">Client Name</label>
+                                        <input id=C_Name type="text" ng-model="C_Name" ng-change="getClients()" class="form-control" placeholder="Write Client Name"><span class="glyphicon glyphicon-log-out form-control-feedback"></span>
+                                </div>
+                                <div class="box-body" style="margin: 20px 0px 0px 0px;">              
+
+                                    <div align="center" class="col span_1_of_1 table-responsive" style=" margin: 0px 0px 0px 60px;"> 
+                                            <table id="table" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >    
+                                                        <th>
+                                                            <h4><b>Name</b>
+                                                            </h4>
+                                                        </th>  
+                                                        <th >
+                                                            <h4><b>ID</b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>   
+                                                        <th> 
+                                                            <h4><b> Options </b>
+                                                            <span id="value" class=""></span></h4>
+                                                        </th>      
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                       <tr ng-repeat="item in clients"> 
+                                                        
+                                                        <td>{{item.C_Name}} {{item.C_LName}} </td>
+                                                        <td>{{item.C_ID}}</td>
+                                                        <td>
+                                                            <div  align="center" class="btn-group">    
+                                                                <a data-toggle="tooltip" title="Edit Client">
+
+                                                                    <button id="editClient" type="button" class="btn btn-info" data-toggle="modal"      data-target="#editClientModal" ng-click="editClient(item.C_ID)"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                                                                </a>
+                                                                <a data-toggle="tooltip" title="Delete Client">
+                                                                    <button id="deleteClient" type="button" class="btn btn-success" ng-click="deleteClientl(item.C_ID)"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button>
+                                                                </a>
+                                                              
+                                                            </div>
+                                                        </td>
+                                                       </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div> 
+                  
+            </div>
+        </div> 
+    </div>
+         <!-- POP UP CREATE NEW CLIENT -->
+    <div id="editClientModal" class="modal"  ng-controller="editClientsCtrl" style="overflow-y: scroll;" >
+      <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+              <span id="close2" class="close">×</span>
+              <h2>Edit Clients</h2>
+            </div>
+            <div class="modal-body">
+                
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Name">Write a Client Name</label>
+                    <input contenteditable='true' type="text" id="C_Name" name="C_Name" ng-model="C_Name"  class="form-control" placeholder="Client Name" >
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_LName">Write a Client LastName</label>
+                    <input  contenteditable='true' type="text" id="C_LName" name="C_LName" ng-model="C_LName" class="form-control" placeholder="Client LastName">
+                </div>  
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_ID">Write a Client ID</label>
+                    <input contenteditable='true' type="number" id="C_ID" name="C_ID" ng-model="C_ID" class="form-control" placeholder="Client ID">
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_BirthDate" >Write a Client BirthDate</label>
+                    <input  contenteditable='true' id=C_BirthDate type="date" ng-model="C_BirthDate" class="form-control" placeholder="Client Birthdate">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Pass">Write a Password</label>
+                    <input contenteditable='true'contenteditable='true'type="text" id= "C_Pass" name="C_Pass" ng-model="C_Pass" class="form-control" placeholder="Client Password">
+                </div>    
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Phone" >Write a Client Phone</label>
+                    <input contenteditable='true' id=C_Phone type="number" ng-model="C_Phone" class="form-control" placeholder="Client Phone">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Address">Write an Address</label>
+                    <input contenteditable='true' type="text" id="C_Address" name="C_Address" ng-model="C_Address" class="form-control" placeholder="Client Address"> 
+                </div>  
+                
+                <div class="form-group has-feedback" style="margin: 20px 0px 0px 0px;">
+                    <label for="C_Penalization" >Write a Client Penalization</label>
+                    <input contenteditable='true' id=C_Penalization type="number" ng-model="C_Penalization" class="form-control" placeholder="Client Penalization">
+                    <span class="glyphicon glyphicon-link form-control-feedback"></span>
+                </div>
+                
+                
+                 
+                <div align="center">
+                    <button  ng-click="updateClient()" style="margin: 20px 20px 20px 20px; width:50%" type="submit" class="btn btn-primary btn-block btn-flat">Update Client</button>
+                </div>   
                   
             </div>
         </div> 
