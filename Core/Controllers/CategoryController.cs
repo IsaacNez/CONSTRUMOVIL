@@ -15,72 +15,42 @@ namespace WebApplication1.Controllers
 {
     public class CategoryController : ApiController
     {
-        public string UpdateConnectionString(string baseString, string[] uattr, string[] uvalue, string[] cattr, string[] cvalue)
-        {
-            string formingString = baseString;
-            formingString = formingString + "SET ";
-            for(int i = 0; i < uattr.Length; i++)
-            {
-                if(i == (uattr.Length - 1))
-                {
-                    formingString = formingString + uattr[i] + "=" + uvalue[i]+" ";
-                }
-                else
-                {
-                    formingString = formingString + uattr[i] + "=" + uvalue[i] + ", ";
-                }
-            }
-            formingString = formingString + "WHERE ";
-            for(int i = 0; i < cattr.Length; i++)
-            {
-                if(i == (cattr.Length - 1))
-                {
-                    formingString = formingString + cattr[i] + "=" + cvalue[i];
-                }
-                else
-                {
-                    formingString = formingString + cattr[i] + "=" + cvalue[i] + " AND ";
-                }
-            }
-            return formingString;
-        }
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Category category)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE CATEGORY ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+     
+            string action = "UPDATE CATEGORY SET CA_Status = '"+category.CA_Status+"',CA_Description = '"+category.CA_Description +"' WHERE CA_ID =" + category.CA_ID;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(category);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "CATEGORY";
+                if (category.ID_Seller != 0)
+                {
+                    tmp.seller.Add(category.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
-        }
-        public static IList<Category> prolist = new List<Category>();
-        [AcceptVerbs("GET")]
-        public Category RPCStyleMethodFetchFirstEmployees()
-        {
-            return prolist.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
-                + "Integrated Security=true;";
         }
 
         [HttpGet]
@@ -95,7 +65,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlDataReader reader = null;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
@@ -123,7 +93,7 @@ namespace WebApplication1.Controllers
             {
                 emp = new Category();
                 emp.CA_ID = reader.GetValue(0).ToString();
-                emp.CDDescription = reader.GetValue(1).ToString();
+                emp.CA_Description = reader.GetValue(1).ToString();
                 values.Add(emp);
 
             }
@@ -137,40 +107,77 @@ namespace WebApplication1.Controllers
         {
             string[] actions = attribute.Split(',');
             string[] ids = id.Split(',');
+            
+
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = deleteString.FormConnectionString("DELETE FROM CATEGORY WHERE ", actions, ids);
+            sqlCmd.CommandText = "DELETE FROM CATEGORY WHERE " + actions[0] + "='" + ids[0] + "';";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {   
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "CATEGORY";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         [HttpPost]
         [ActionName("Post")]
         public void AddCategory(Category category)
         {
+ 
+
             System.Diagnostics.Debug.WriteLine(category.CA_ID);
             System.Diagnostics.Debug.WriteLine("entrando al post");
 
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO CATEGORY(CA_ID,CDescription) Values(@CA_ID,@CDescription)";
+            sqlCmd.CommandText = "INSERT INTO CATEGORY(CA_ID,CA_Description,CA_Status) Values(@CA_ID,@CA_Description,@CA_Status)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@CA_ID", category.CA_ID);
-            sqlCmd.Parameters.AddWithValue("@CDescription", category.CDDescription);
+            sqlCmd.Parameters.AddWithValue("@CA_Description", category.CA_Description);
+            sqlCmd.Parameters.AddWithValue("@CA_Status", category.CA_Status);
 
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(category);
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "INSERT";
+                tmp.model = jsonString;
+                tmp.table = "CATEGORY";
+                if (category.ID_Seller != 0)
+                {
+                    tmp.seller.Add(category.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
     }

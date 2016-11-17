@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
+using WebApplication1.Models;
 
 namespace Core
 {
@@ -11,6 +12,9 @@ namespace Core
     {
         protected void Application_Start()
         {
+            
+            Application["tasks"] = new List<Sync>();
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

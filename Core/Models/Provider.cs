@@ -8,14 +8,12 @@ namespace WebApplication1.Models
     public class Provider
     {
         public int P_ID { get; set; }
-        public string PName { get; set; }
-        public string LName { get; set; }
-        public string PAddress { get; set; }
-        public int Phone { get; set; }
-        public int Day { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
-        public int S_ID { get; set; }
+        public string P_Name { get; set; }
+        public string P_LName { get; set; }
+        public string P_Address { get; set; }
+        public DateTime P_Date { get; set; }
+        public int ID_Seller { get; set; }
+        public string P_Status { get; set; }
 
     }
 }

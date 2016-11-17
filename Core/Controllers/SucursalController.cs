@@ -28,30 +28,40 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Sucursal sucursal)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE SUCURSAL ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+            string action = "UPDATE SUCURSAL SET S_NAME = '" + sucursal.S_Name + "' ,S_Address = '" + sucursal.S_Address + "' WHERE S_ID =" + sucursal.S_ID;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            
+            try
+            {
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(sucursal);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "SUCURSAL";
+                if (sucursal.ID_Seller != 0)
+                {
+                    tmp.seller.Add(sucursal.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
         }
 
@@ -95,7 +105,8 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlDataReader reader = null;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+           
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
@@ -122,31 +133,48 @@ namespace WebApplication1.Controllers
             {
                 emp = new Sucursal();
                 emp.S_ID = Convert.ToInt32(reader.GetValue(0).ToString());
-                emp.SName = reader.GetValue(1).ToString();
-                emp.SAddress = reader.GetValue(2).ToString();
+                emp.S_Name = reader.GetValue(1).ToString();
+                emp.S_Address = reader.GetValue(2).ToString();
                 values.Add(emp);
 
             }
             
             myConnection.Close();
+            JsonResult<List<Sucursal>> results = Json(values);
+            System.Diagnostics.Debug.WriteLine("Estp se va a poner loco "+results);
             return Json(values);
         }
         [HttpGet]
         [ActionName("Delete")]
         public void Delete(string attribute, string id)
         {
-            string[] actions = attribute.Split(',');
+            string[] attr = attribute.Split(',');
             string[] ids = id.Split(',');
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
-
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = deleteString.FormConnectionString("DELETE FROM SUCURSAL WHERE ", actions, ids);
+            sqlCmd.CommandText = "DELETE FROM SUCURSAL WHERE S_ID=" + id + ";";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "SUCURSAL";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+
+            }
             myConnection.Close();
         }
         [HttpPost]
@@ -157,21 +185,41 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("entrando al post");
 
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO SUCURSAL(S_ID,SName,SAddress) Values(@S_ID,@SName,@SAddress)";
+            sqlCmd.CommandText = "INSERT INTO SUCURSAL(S_ID,S_Name,S_Address) Values(@S_ID,@S_Name,@S_Address)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@S_ID", sucursal.S_ID);
-            sqlCmd.Parameters.AddWithValue("@SName", sucursal.SName);
-            sqlCmd.Parameters.AddWithValue("@SAddress", sucursal.SAddress);
+            sqlCmd.Parameters.AddWithValue("@S_Name", sucursal.S_Name);
+            sqlCmd.Parameters.AddWithValue("@S_Address", sucursal.S_Address);
 
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(sucursal);
+                System.Diagnostics.Debug.Write("insertó");
+                tmp.action = "insert";
+                tmp.model = jsonString;
+                tmp.table = "SUCURSAL";
+                if (sucursal.ID_Seller != 0)
+                {
+                    tmp.seller.Add(sucursal.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+                System.Diagnostics.Debug.Write(Models.Tasks.tasks.Count);
+            }
+            catch (SqlException)
+            {
+
+            }
             myConnection.Close();
         }
     }

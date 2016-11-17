@@ -15,42 +15,40 @@ namespace WebApplication1.Controllers
 {
     public class ClientController : ApiController
     {
-        public static IList<Client> prolist = new List<Client>();
-        [AcceptVerbs("GET")]
-        public Client RPCStyleMethodFetchFirstEmployees()
-        {
-            return prolist.FirstOrDefault();
-        }
-        static private string GetConnectionString()
-        {
-            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
-                + "Integrated Security=true;";
-        }
 
-        [HttpGet]
+        [HttpPut]
         [ActionName("Update")]
-        public void UpdateRecords(string attr, string avalue, string clause, string id)
+        public void UpdateRecords(Client client)
         {
-            string[] uattr = attr.Split(',');
-            string[] uvalue = avalue.Split(',');
-            string[] cattr = clause.Split(',');
-            string[] cvalue = id.Split(',');
-            string action = "";
-            CategoryController updateString = new CategoryController();
-            action = updateString.UpdateConnectionString("UPDATE CLIENT ", uattr, uvalue, cattr, cvalue);
-            System.Diagnostics.Debug.WriteLine(action);
-
+            string action = "UPDATE CLIENT SET C_Name = '" + client.C_Name + "',C_LName = '" + client.C_LName+"',C_Address = '"+client.C_Address+"',C_Phone = "+client.C_Phone+",C_Date = "+client.C_Date+",C_Penalization = "+client.C_Penalization+"C_Status = '"+client.C_Status + "' WHERE C_ID =" + client.C_ID;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.CommandText = action;
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(client);
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine("Actualizó");
+                tmp.action = "UPDATE";
+                tmp.model = jsonString;
+                tmp.table = "ClIENT";
+                if (client.ID_Seller != 0)
+                {
+                    tmp.seller.Add(client.ID_Seller);
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
+
             myConnection.Close();
         }
 
@@ -67,7 +65,7 @@ namespace WebApplication1.Controllers
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlDataReader reader = null;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
@@ -96,13 +94,14 @@ namespace WebApplication1.Controllers
             {
                 emp = new Client();
                 emp.C_ID = Convert.ToInt32(reader.GetValue(0));
-                emp.FName = reader.GetValue(1).ToString();
-                emp.LName = reader.GetValue(2).ToString();
-                emp.CAddress = reader.GetValue(3).ToString();
-                emp.Phone = Convert.ToInt32(reader.GetValue(4).ToString());
-                emp.Day = Convert.ToInt32(reader.GetValue(5).ToString());
-                emp.Month = Convert.ToInt32(reader.GetValue(6).ToString());
-                emp.Penalization = Convert.ToInt32(reader.GetValue(7).ToString());
+                emp.C_Name = reader.GetValue(1).ToString();
+                emp.C_LName = reader.GetValue(2).ToString();
+                emp.C_Address = reader.GetValue(3).ToString();
+                emp.C_Phone = Convert.ToInt32(reader.GetValue(4).ToString());
+                emp.C_Date = (DateTime)reader.GetValue(5);
+               
+                emp.C_Penalization = Convert.ToInt32(reader.GetValue(6).ToString());
+                
                 values.Add(emp);
             }
             
@@ -116,47 +115,75 @@ namespace WebApplication1.Controllers
             string[] actions = attribute.Split(',');
             string[] ids = id.Split(',');
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             SucursalController deleteString = new SucursalController();
-            sqlCmd.CommandText = deleteString.FormConnectionString("DELETE FROM CLIENT WHERE ", actions, ids);
+            sqlCmd.CommandText = "DELETE FROM CLIENT WHERE " + actions[0] + "=" + ids[0];
             sqlCmd.Connection = myConnection;
             myConnection.Open();
-            int rowDeleted = sqlCmd.ExecuteNonQuery();
+            try
+            {
+                Sync tmp = new Sync();
+                sqlCmd.ExecuteNonQuery();
+                System.Diagnostics.Debug.Write("borró");
+                tmp.action = "delete";
+                tmp.model = ids[0];
+                tmp.table = "CLIENT";
+                if (Convert.ToInt32(ids[1]) != 0)
+                {
+                    tmp.seller.Add(Convert.ToInt32(ids[1]));
+                }
+                Models.Tasks.tasks.Add(tmp);
+            }
+            catch (SqlException)
+            {
+            }
             myConnection.Close();
         }
         [HttpPost]
         [ActionName("Post")]
         public void AddClient(Client client)
         {
-            System.Diagnostics.Debug.WriteLine(client.C_ID);
-            System.Diagnostics.Debug.WriteLine(client.FName);
+            //System.Diagnostics.Debug.WriteLine(client.C_ID);
+            //System.Diagnostics.Debug.WriteLine(client.FName);
             System.Diagnostics.Debug.WriteLine("entrando al post");
 
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
             System.Diagnostics.Debug.WriteLine(myConnection.State);
 
-            sqlCmd.CommandText = "INSERT INTO CLIENT(C_ID,FName,LName,CAddress,Phone,Day,Month,Year, Penalization, CPassword) Values(@C_ID,@FName,@LName,@CAddress,@Phone,@Day,@Month,@Year, @Penalization,@CPassword)";
+            sqlCmd.CommandText = "INSERT INTO CLIENT(C_ID,C_Name,C_LName,C_Address,C_Phone,C_Date,C_Penalization,C_Status) Values(@C_ID,@C_Name,@C_LName,@C_Address,@C_Phone,@C_Date,@C_Penalization,@C_Status)";
             System.Diagnostics.Debug.WriteLine("generando comando");
 
             sqlCmd.Connection = myConnection;
             sqlCmd.Parameters.AddWithValue("@C_ID", client.C_ID);
-            sqlCmd.Parameters.AddWithValue("@FName", client.FName);
-            sqlCmd.Parameters.AddWithValue("@LName", client.LName);
-            sqlCmd.Parameters.AddWithValue("@CAddress", client.CAddress);
-            sqlCmd.Parameters.AddWithValue("@Phone", client.Phone);
-            sqlCmd.Parameters.AddWithValue("@Day", client.Day);
-            sqlCmd.Parameters.AddWithValue("@Month", client.Month);
-            sqlCmd.Parameters.AddWithValue("@Year", client.Year);
-            sqlCmd.Parameters.AddWithValue("@Penalization", client.Penalization);
-            sqlCmd.Parameters.AddWithValue("@CPassword", client.CPassword);
+            sqlCmd.Parameters.AddWithValue("@C_Name", client.C_Name);
+            sqlCmd.Parameters.AddWithValue("@C_LName", client.C_LName);
+            sqlCmd.Parameters.AddWithValue("@C_Address", client.C_Address);
+            sqlCmd.Parameters.AddWithValue("@C_Phone", client.C_Phone);
+            sqlCmd.Parameters.AddWithValue("@C_Date", client.C_Date);
+            sqlCmd.Parameters.AddWithValue("@C_Penalization", client.C_Penalization);
+            sqlCmd.Parameters.AddWithValue("@C_Status", "available");
+
             myConnection.Open();
-            int rowInserted = sqlCmd.ExecuteNonQuery();
+            Sync tmp = new Sync();
+
+            string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(client);
+            sqlCmd.ExecuteNonQuery();
+            System.Diagnostics.Debug.Write("insertó");
+            tmp.action = "insert";
+            tmp.model = jsonString;
+            tmp.table = "CLIENT";
+            if (client.ID_Seller != 0)
+            {
+                tmp.seller.Add(client.ID_Seller);
+            }
+            Models.Tasks.tasks.Add(tmp);
+            System.Diagnostics.Debug.WriteLine("cliente serialize:" + Newtonsoft.Json.JsonConvert.SerializeObject(client));
             myConnection.Close();
         }
     }

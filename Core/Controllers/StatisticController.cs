@@ -10,7 +10,6 @@ using System.Data;
 using System.Text;
 using System.Web.Http.Cors;
 using System.Web.Http.Results;
-using Core.Models;
 using Newtonsoft.Json.Linq;
 
 namespace Core.Controllers
@@ -20,7 +19,7 @@ namespace Core.Controllers
         
         static private string GetConnectionString()
         {
-            return @"Data Source=DESKTOP-5CS494L;Initial Catalog=EPATEC;"
+            return @"Data Source=ISAAC\ISAACSERVER;Initial Catalog=EPATEC;"
                 + "Integrated Security=true;";
         }
         public string FormGetString(string baseString, string[] attr, string[] ids)
@@ -76,7 +75,7 @@ namespace Core.Controllers
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlDataReader reader = null;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = GetConnectionString();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");

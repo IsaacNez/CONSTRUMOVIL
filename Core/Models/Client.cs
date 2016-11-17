@@ -9,15 +9,14 @@ namespace WebApplication1.Models
     public class Client
     {
         public int C_ID { get; set; }
-        public string FName { get; set; }
-        public string LName { get; set; }
-        public string CAddress { get; set; }
-        public int Phone { get; set; }
-        public int Day { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
-        public int Penalization { get; set; }
-        public string CPassword { get; set; }
+        public string C_Name { get; set; }
+        public string C_LName { get; set; }
+        public string C_Address { get; set; }
+        public int C_Phone { get; set; }
+        public DateTime C_Date { get; set; }
+        public int C_Penalization { get; set; }
+        public int ID_Seller { get; set; }
+        public string C_Status { get; set; }
 
     }
 }

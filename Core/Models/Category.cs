@@ -8,8 +8,10 @@ namespace WebApplication1.Models
 {
     public class Category
     {
-        public string CA_ID { get; set; }
-        public string CDDescription { get; set; }
 
+        public string CA_ID { get; set; }
+        public string CA_Description { get; set; }
+        public string CA_Status { get; set; }
+        public int ID_Seller { get; set; }
     }
 }

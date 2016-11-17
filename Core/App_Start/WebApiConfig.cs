@@ -1,10 +1,15 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using WebApplication1.Models;
+using System.Collections.Generic;
+
+
 
 namespace Core
 {
     public static class WebApiConfig
     {
+   
             public static void Register(HttpConfiguration config)
             {
                 System.Diagnostics.Debug.WriteLine("Está llegando acá "+config.Routes.VirtualPathRoot.ToString());
@@ -26,7 +31,7 @@ namespace Core
                 );
             config.Routes.MapHttpRoute(
                 name: "Update",
-                routeTemplate: "api/{controller}/update/{attr}/{avalue}/{clause}/{id}",
+                routeTemplate: "api/{controller}/update/{id}",
                 defaults: new { id = RouteParameter.Optional}
                 );
             config.Routes.MapHttpRoute(
