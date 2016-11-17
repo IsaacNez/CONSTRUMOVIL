@@ -298,34 +298,23 @@ app = angular.module('dependentView')
         });
     $scope.getProviders = function(){
         console.log("geteando");
-        $http.get(link+'/api/providers/get/P_ID/undefined')
+        $http.get(link+'/api/provider/get/P_ID/undefined')
                 .then( function (response) {    
                   $scope.providers = response.data;           
             });
     }
-    $scope.editProvider = function(item){
-        
-       
+    $scope.editProvider = function(item){ 
       $http.get(link+'/api/provider/get/P_ID/'+item)
                 .then( function (response) {    
                   information = response.data[0];
                   console.log(information);
-                  console.log(information.P_ID);
-                  console.log(information.P_Name);
-               /*   document.getElementById("E_IDU").innerHTML = information.W_ID;
-                  document.getElementById("E_NameU").innerHTML = information.W_Name;
-                  document.getElementById("E_LNameU").innerHTML = information.W_LName;
-                  document.getElementById("E_AddressU").innerHTML = information.W_Address;
-                  document.getElementById("E_PassU").innerHTML = information.W_Password;*/
-                  $('#P_ID').val(information.P_ID);
-                  $('#P_NameU').val(information.P_Name);
-                  $('#P_LNameU').val(information.P_LName);
-                  $('#P_AddressU').val(information.P_Address);
-                  $('#P_PassU').val(information.P_Password);
-                  $('#P_Phone').val(information.P_Phone);
-                  $('#P_Status').val(information.P_Status);
-                  $('#S_ID').val(information.S_ID);
-                 
+                  $('#P_IDE').val(information.P_ID);
+                  $('#P_NameE').val(information.P_Name);
+                  $('#P_LNameE').val(information.P_LName);
+                  $('#P_AddressE').val(information.P_Address);
+                  $('#P_DateE').val(information.P_DateE);
+                  $('#P_StatusE').val(information.P_Status);
+                             
           
         });
         values=$scope.information;
@@ -333,6 +322,7 @@ app = angular.module('dependentView')
       
              
     }
+    
     $scope.deleteProvider = function(item){
          console.log("eliminando "+item);
          $http.get(link+'/api/provider/delete/P_ID/'+item+",0")
@@ -340,14 +330,15 @@ app = angular.module('dependentView')
                   $scope.employees = response.data;           
             });
     }
+    
     $scope.updateProvider= function () {
         var Provider = {
-            "P_ID": $scope.P_IDU,
-            "P_Name": $scope.P_NameU,
-            "P_LName": $scope.P_LNameU,
-            "P_Address": $scope.P_AddressU,
-            "P_Password": $scope.P_Password,
-            "P_Status": $scope.P_Password,
+            "P_ID": $scope.P_IDE,
+            "P_Name": $scope.P_NameE,
+            "P_LName": $scope.P_LNameE,
+            "P_Address": $scope.P_AddressE,
+            "P_Date": $scope.P_DateE,
+            "P_Status": $scope.P_StatusE,
         }
         console.log(Provider);
         $http.put(link +'/api/provider/update',Provider).
@@ -402,16 +393,15 @@ app = angular.module('dependentView')
                   document.getElementById("E_LNameU").innerHTML = information.W_LName;
                   document.getElementById("E_AddressU").innerHTML = information.W_Address;
                   document.getElementById("E_PassU").innerHTML = information.W_Password;*/
-                  $('#PR_ID').val(information.PR_ID);
-                  $('#PR_Name').val(information.PR_Name);
-                  $('#PR_Description').val(information.PR_Description);
-                  $('#PR_Status').val(information.PR_Status);
-                  $('#PR_Exempt').val(information.PR_Exempt);
-                  $('#PR_Price').val(information.PR_Price);
-                  $('#PR_Amount').val(information.PR_Amount);
-                  $('#CA_ID').val(information.CA_ID);
-                  $('#S_ID').val(information.S_ID);
-                  $('#P_ID').val(information.P_ID);
+                  console.log(information);
+                  $('#PR_IDE').val(information.PR_ID);
+                  $('#PR_NameE').val(information.PR_Name);
+                  $('#PR_DescriptionE').val(information.PR_Description);
+                  $('#PR_StatusE').val(information.PR_Status);
+                  $('#PR_ExemptE').val(information.PR_Exempt);
+                  $('#PR_PriceE').val(information.PR_Price);
+                  $('#PR_AmountE').val(information.PR_Quantity);
+            
              
           
           
@@ -427,17 +417,18 @@ app = angular.module('dependentView')
             });
     }
     $scope.updateProduct = function () {
+ 
         var Product = {
-            "PR_ID": $scope.PR_ID,
-            "PR_Name": $scope.PR_Name,
-            "PR_Description": $scope.PR_Description,
-            "PR_Status": $scope.PR_Status,
-            "PR_Exempt": $scope.PR_Exempt,
-            "PR_Price": $scope.PR_Price,
-            "PR_Amount": $scope.PR_Amount,
+            "PR_ID": $scope.PR_IDE,
+            "PR_Name": $scope.PR_NameE,
+            "PR_Description": $scope.PR_DescriptionE,
+            "PR_Status": $scope.PR_StatusE,
+            "PR_Exempt": $scope.PR_ExemptE,
+            "PR_Price": $scope.PR_PriceE,
+            "PR_Quantity": $scope.PR_AmountE,
             "CA_ID": $scope.CA_ID,
-            "S_ID": $scope.S_ID,
-            "P_ID": $scope.P_ID
+            "S_ID": parseInt($scope.S_ID),
+            "P_ID": parseInt($scope.P_ID)
             
         }
         console.log(Product);
@@ -466,21 +457,19 @@ app = angular.module('dependentView')
                   $scope.categories = response.data;           
             });
     }
-    $scope.editcategory = function(item){
-        
-       
+    $scope.editCategory = function(item){
       $http.get(link+'/api/category/get/CA_ID/'+item)
                 .then( function (response) {    
                   information = response.data[0];
-                
+                  console.log(information);
                /*   document.getElementById("E_IDU").innerHTML = information.W_ID;
                   document.getElementById("E_NameU").innerHTML = information.W_Name;
                   document.getElementById("E_LNameU").innerHTML = information.W_LName;
                   document.getElementById("E_AddressU").innerHTML = information.W_Address;
                   document.getElementById("E_PassU").innerHTML = information.W_Password;*/
-                  $('#CA_ID').val(information.CA_ID);
-                  $('#CA_Description').val(information.CA_Description);
-                  $('#CA_Status').val(information.CA_Status);
+                  $('#CA_IDE').val(information.CA_ID);
+                  $('#CA_DescriptionE').val(information.CA_Description);
+                  $('#CA_StatusE').val(information.CA_Status);
                 
           
           
@@ -499,12 +488,12 @@ app = angular.module('dependentView')
     }
     $scope.updateCategory= function () {
         var Category = {
-            "CA_ID": $scope.CA_ID,
-            "CA_Description": $scope.CA_Description,
-            "CA_Status": $scope.CA_Status}
+            "CA_ID": $scope.CA_IDE,
+            "CA_Description": $scope.CA_DescriptionE,
+            "CA_Status": $scope.CA_StatusE}
       
         console.log(Category);
-        $http.put(link +'/api/employees/update',Category).
+        $http.put(link +'/api/category/update',Category).
         success(function (data, status, headers, config) {
             alert('the new employee has been posted!');
         }).
@@ -541,9 +530,9 @@ app = angular.module('dependentView')
                   document.getElementById("E_LNameU").innerHTML = information.W_LName;
                   document.getElementById("E_AddressU").innerHTML = information.W_Address;
                   document.getElementById("E_PassU").innerHTML = information.W_Password;*/
-                  $('#S_ID').val(information.S_ID);
-                  $('#S_Name').val(information.S_Name);
-                  $('#S_Address').val(information.S_Address);
+                  $('#S_IDE').val(information.S_ID);
+                  $('#S_NameE').val(information.S_Name);
+                  $('#S_AddressE').val(information.S_Address);
                 
           
           
@@ -562,9 +551,9 @@ app = angular.module('dependentView')
     }
     $scope.updateSucursal= function () {
         var Sucursal = {
-            "S_ID": $scope.S_ID,
-            "S_Name": $scope.S_Name,
-            "S_Address": $scope.S_Address,
+            "S_ID": $scope.S_IDE,
+            "S_Name": $scope.S_NameE,
+            "S_Address": $scope.S_AddressE,
         }
         console.log(Sucursal);
         $http.put(link +'/api/sucursal/update',Sucursal).
@@ -585,24 +574,25 @@ app = angular.module('dependentView')
 
     $scope.getClients = function(){
         console.log("geteando");
-        $http.get(link+'/api/clients/get/C_ID/undefined')
+        $http.get(link+'/api/client/get/C_ID/undefined')
                 .then( function (response) {    
                   $scope.clients = response.data;           
             });
     }
     $scope.editClient = function(item){
-      $http.get(link+'/api/provider/get/P_ID/'+item)
+      $http.get(link+'/api/client/get/C_ID/'+item)
                 .then( function (response) {    
                   information = response.data[0];
-                  $('#C_ID').val(information.C_ID);
-                  $('#C_Name').val(information.C_Name);
-                  $('#C_LName').val(information.C_LName);
-                  $('#C_Address').val(information.C_Address);
-                  $('#C_Password').val(information.C_Password);
-                  $('#C_BirthDate').val(information.C_BirthDate);
-                  $('#C_Phone').val(information.C_Phone);
-                  $('#C_Status').val(information.C_Status); 
-                  $('#C_Penalization').val(information.C_Penalization); 
+                  console.log(information);
+                  $('#C_IDE').val(information.C_ID);
+                  $('#C_NameE').val(information.C_Name);
+                  $('#C_LNameE').val(information.C_LName);
+                  $('#C_AddressE').val(information.C_Address);
+                  $('#C_BirthDateE').val(information.C_Date);
+                  $('#C_PhoneE').val(information.C_Phone);
+                  $('#C_StatusE').val(information.C_Status); 
+                  $('#C_PenalizationE').val(information.C_Penalization); 
+                  $('#C_StatusE').val(information.C_Status); 
         });
         values=$scope.information;
         
@@ -618,17 +608,17 @@ app = angular.module('dependentView')
     }
     $scope.updateClient= function () {
         var Client = {
-            "C_ID": $scope.C_ID,
-            "C_Name": $scope.C_Name,
-            "C_LName": $scope.C_LName,
-            "C_Address": $scope.C_Address,
-            "C_Phone": $scope.C_Phone,
-            "C_Date": $scope.C_BirthDate,     
-            "C_Penalization":$scope.C_Penalization,
-            "C_Password":$scope.C_Pass
+            "C_ID": $scope.C_IDE,
+            "C_Name": $scope.C_NameE,
+            "C_LName": $scope.C_LNameE,
+            "C_Address": $scope.C_AddressE,
+            "C_Phone": $scope.C_PhoneE,
+            "C_Date": $scope.C_BirthDateE,     
+            "C_Penalization":$scope.C_PenalizationE,
+            "C_StatusE":$scope.C_StatusE
         }
         console.log(Client);
-        $http.put(link +'/api/provider/update',Client).
+        $http.put(link +'/api/client/update',Client).
         success(function (data, status, headers, config) {
             alert('the new Client has been posted!');
         }).
