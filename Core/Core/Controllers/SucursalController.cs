@@ -154,7 +154,7 @@ namespace WebApplication1.Controllers
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.CommandText = "DELETE FROM SUCURSAL WHERE S_ID=" + id + ";";
+            sqlCmd.CommandText = "DELETE FROM SUCURSAL WHERE S_ID=" + ids[0] + ";";
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             try
